@@ -1,15 +1,14 @@
 <?php
 /*======================================================================*\
 || #################################################################### ||
-|| # Yet Another Award System v2.1.4 © by HacNho                      # ||
+|| # Yet Another Award System v4.0.3 © by HacNho                      # ||
 || # Copyright (C) 2005-2007 by HacNho, All rights reserved.          # ||
 || # ---------------------------------------------------------------- # ||
-|| # For use with vBulletin Version 3.6.x                             # ||
+|| # For use with vBulletin Version 4.1.12                             # ||
 || # http://www.vbulletin.com | http://www.vbulletin.com/license.html # ||
 || # Discussion and support available at                              # ||
 || # http://www.vbulletin.org/forum/showthread.php?t=94836            # ||
 || # ---------------------------------------------------------------- # ||
-|| # CVS: $RCSfile: awards.php,v 2.1.4 - Revision: 070324             # ||
 || #################################################################### ||
 \*======================================================================*/
 
@@ -95,15 +94,18 @@ function cache_award_cats($award_cat_id = -1, $depth = 0, $display_award_cat_id=
 }
 
 // ###################### Start makedepthmark #######################
-function construct_depth_mark($depth, $depthchar, $depthmark = '')
+if(!function_exists('construct_depth_mark'))
 {
-// repeats the supplied $depthmark for the number of times supplied by $depth
-// and appends it onto $depthmark
-	for ($i = 0; $i < $depth; $i++)
+	function construct_depth_mark($depth, $depthchar, $depthmark = '')
 	{
-		$depthmark .= $depthchar;
+	// repeats the supplied $depthmark for the number of times supplied by $depth
+	// and appends it onto $depthmark
+		for ($i = 0; $i < $depth; $i++)
+		{
+			$depthmark .= $depthchar;
+		}
+		return $depthmark;
 	}
-	return $depthmark;
 }
 // end functions
 // ************************************************************
@@ -193,7 +195,7 @@ $totalcols = $vbulletin->options['aw_showicon']+ $vbulletin->options['aw_showima
 						$awarduserslist = substr($awarduserslist , 2); // get rid of initial comma
 						if (($vbulletin->options['aw_display_memberlimit'] > 0) AND ($aw_ui > $vbulletin->options['aw_display_memberlimit']))
 						{
-							$awarduserslist .= "<br> <div align=\"right\"><font size=\"-1\"><a href=\"awards.php?do=viewaward&award_id=$award[award_id]\">$vbphrase[aw_more_users]</a></font></div>";
+							$awarduserslist .= "<br> <div align=\"right\"><font size=\"-1\"><a href=\"awards.php?do=viewaward&amp;award_id=$award[award_id]\">$vbphrase[aw_more_users]</a></font></div>";
 						}
 					}
 					exec_switch_bg();

@@ -32,7 +32,7 @@ if (!can_administer('canadminusers'))
 print_cp_header($vbphrase['awards']);
 
 // Get Latest Version from vBulletin.org
-$productVerCheckURL = "http://www.vbulletin.org/forum/misc.php?do=productcheck&pid=YaAS4-40";
+$productVerCheckURL = "http://www.vbulletin.org/forum/misc.php?do=productcheck&amp;pid=YaAS4-40";
 $latestVersion = file_get_contents($productVerCheckURL);
 $latestVersion = ereg_replace("[^A-Za-z0-9.]", "", $latestVersion );
 $latestVersion = substr($latestVersion, 23);

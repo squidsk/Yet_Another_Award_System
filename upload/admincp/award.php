@@ -1,15 +1,14 @@
 <?php
 /*======================================================================*\
 || #################################################################### ||
-|| # Yet Another Award System v2.1.4 © by HacNho                      # ||
+|| # Yet Another Award System v4.0.3 © by HacNho                      # ||
 || # Copyright (C) 2005-2007 by HacNho, All rights reserved.          # ||
 || # ---------------------------------------------------------------- # ||
-|| # For use with vBulletin Version 3.6.x                             # ||
+|| # For use with vBulletin Version 4.1.12                             # ||
 || # http://www.vbulletin.com | http://www.vbulletin.com/license.html # ||
 || # Discussion and support available at                              # ||
 || # http://www.vbulletin.org/forum/showthread.php?t=94836            # ||
 || # ---------------------------------------------------------------- # ||
-|| # CVS: $RCSfile: admincp/award.php,v 2.1.4 - Revision: 070324      # ||
 || #################################################################### ||
 \*======================================================================*/
 
@@ -366,13 +365,13 @@ if ($_POST['do'] == 'doremoveissuedaward')
 				$db->query_write("DELETE FROM " . TABLE_PREFIX . "award_user WHERE issue_id = ". $vbulletin->GPC['issue_id'] ."");
 			}
 		}
-		define('CP_REDIRECT', "award.php?do=awardusers&award_id=" . $vbulletin->GPC['award_id']);
+		define('CP_REDIRECT', "award.php?do=awardusers&amp;award_id=" . $vbulletin->GPC['award_id']);
 		print_stop_message('removed_award_from_users_successfully');
 	}
 	else if (!empty($vbulletin->GPC['issue_id']))
 	{
 		$db->query_write("DELETE FROM " . TABLE_PREFIX . "award_user WHERE issue_id = ". $vbulletin->GPC['issue_id'] ."");
-		define('CP_REDIRECT', "award.php?do=awardusers&award_id=" . $vbulletin->GPC['award_id']);
+		define('CP_REDIRECT', "award.php?do=awardusers&amp;award_id=" . $vbulletin->GPC['award_id']);
 		print_stop_message('removed_award_from_users_successfully');
 	}
 }
@@ -787,8 +786,8 @@ if ($_REQUEST['do'] == 'awardusers')
 			$cell[] = "$awarduser[issue_reason]";
 			$cell[] = '<span class="smallfont">' . vbdate($vbulletin->options['dateformat'], $awarduser['issue_time']) . ' ' . vbdate($vbulletin->options['timeformat'], $awarduser['issue_time']) . '</span>';
 			$cell[] = "
-				<a href=\"award.php?$session[sessionurl]do=editissuedaward&issue_id=$awarduser[issue_id]\">$vbphrase[edit]</a>
-				<a href=\"award.php?$session[sessionurl]do=removeissuedaward&issue_id=$awarduser[issue_id]\">$vbphrase[remove]</a>
+				<a href=\"award.php?$session[sessionurl]do=editissuedaward&amp;issue_id=$awarduser[issue_id]\">$vbphrase[edit]</a>
+				<a href=\"award.php?$session[sessionurl]do=removeissuedaward&amp;issue_id=$awarduser[issue_id]\">$vbphrase[remove]</a>
 			";
 			$cell[] = "
 				<label for=\"d_$awarduser[issue_id]\"><input type=\"checkbox\" name=\"validate[$awarduser[issue_id]]\" id=\"d_$user[userid]\" value=\"-1\" tabindex=\"1\"/></label>
@@ -933,7 +932,7 @@ if ($_REQUEST['do'] == 'manage')
 	{
 		$award_cat_info =
 			"\t\t<b>$vbphrase[unclassified_awards]</b> ".
-			construct_link_code($vbphrase['add_new_award'], "award.php?$session[sessionurl]do=add&award_cat_id=-1")
+			construct_link_code($vbphrase['add_new_award'], "award.php?$session[sessionurl]do=add&amp;award_cat_id=-1")
 			. "\n";
 		print_description_row($award_cat_info, 0, 6);
 
@@ -955,7 +954,7 @@ if ($_REQUEST['do'] == 'manage')
 				{
 					foreach($awarduserscache[$award['award_id']] AS $userid => $awardusers)
 					{
-						$awarduserslist .= ", <a href=\"user.php?do=edit&userid=$awardusers[userid]\">$awardusers[username]</a>";
+						$awarduserslist .= ", <a href=\"user.php?do=edit&amp;userid=$awardusers[userid]\">$awardusers[username]</a>";
 					}
 				}
 				$awarduserslist = substr($awarduserslist , 2); // get rid of initial comma
@@ -970,8 +969,8 @@ if ($_REQUEST['do'] == 'manage')
 		";
 		$cell[] = "" .
 				construct_link_code($vbphrase['edit'], "award.php?$session[sessionurl]do=edit&amp;award_id=$award[award_id]") .
-				construct_link_code($vbphrase['delete'], "award.php?$session[sessionurl]do=remove&award_id=$award[award_id]") .
-				construct_link_code($vbphrase['give_user_award'], "award.php?$session[sessionurl]do=awardusers&award_id=$award[award_id]") .
+				construct_link_code($vbphrase['delete'], "award.php?$session[sessionurl]do=remove&amp;award_id=$award[award_id]") .
+				construct_link_code($vbphrase['give_user_award'], "award.php?$session[sessionurl]do=awardusers&amp;award_id=$award[award_id]") .
 				"";
 		print_cells_row($cell, 0, '', 1);
 		}
@@ -983,11 +982,11 @@ if ($_REQUEST['do'] == 'manage')
 	{
 		$award_cat_info = "<b>" . 
 			construct_depth_mark($award_cat['depth'], '- - ', '- - ') 
-			. "<a href=\"award.php?$session[sessionurl]do=manage&award_cat_id=$award_cat[award_cat_id]\">$award_cat[award_cat_title]</a></b> <span class=\"normal\">".
+			. "<a href=\"award.php?$session[sessionurl]do=manage&amp;award_cat_id=$award_cat[award_cat_id]\">$award_cat[award_cat_title]</a></b> <span class=\"normal\">".
 			construct_link_code($vbphrase['mass_move'], "award.php?$session[sessionurl]do=manage&amp;massmove=1&amp;award_cat_id=$award_cat[award_cat_id]").
-			construct_link_code($vbphrase['edit'], "award_cat.php?$session[sessionurl]do=editcat&award_cat_id=$award_cat[award_cat_id]").
-			construct_link_code($vbphrase['delete'], "award_cat.php?$session[sessionurl]do=removecat&award_cat_id=$award_cat[award_cat_id]").
-			construct_link_code($vbphrase['add_new_award'], "award.php?$session[sessionurl]do=add&award_cat_id=$award_cat[award_cat_id]").
+			construct_link_code($vbphrase['edit'], "award_cat.php?$session[sessionurl]do=editcat&amp;award_cat_id=$award_cat[award_cat_id]").
+			construct_link_code($vbphrase['delete'], "award_cat.php?$session[sessionurl]do=removecat&amp;award_cat_id=$award_cat[award_cat_id]").
+			construct_link_code($vbphrase['add_new_award'], "award.php?$session[sessionurl]do=add&amp;award_cat_id=$award_cat[award_cat_id]").
 		"</span>\n";
 
 		print_table_header($award_cat_info, 6, 0,'','center');
@@ -1022,7 +1021,7 @@ if ($_REQUEST['do'] == 'manage')
 				{
 					foreach($awarduserscache[$award['award_id']] AS $userid => $awardusers)
 					{
-						$awarduserslist .= ", <a href=\"user.php?do=edit&userid=$awardusers[userid]\">$awardusers[username]</a>";
+						$awarduserslist .= ", <a href=\"user.php?do=edit&amp;userid=$awardusers[userid]\">$awardusers[username]</a>";
 					}
 				}
 				$awarduserslist = substr($awarduserslist , 2); // get rid of initial comma
@@ -1058,8 +1057,8 @@ if ($_REQUEST['do'] == 'manage')
 				}
 				$cell[] = "" .
 						construct_link_code($vbphrase['edit'], "award.php?$session[sessionurl]do=edit&amp;award_id=$award[award_id]") .
-						construct_link_code($vbphrase['delete'], "award.php?$session[sessionurl]do=remove&award_id=$award[award_id]") .
-						construct_link_code($vbphrase['give_user_award'], "award.php?$session[sessionurl]do=awardusers&award_id=$award[award_id]") .
+						construct_link_code($vbphrase['delete'], "award.php?$session[sessionurl]do=remove&amp;award_id=$award[award_id]") .
+						construct_link_code($vbphrase['give_user_award'], "award.php?$session[sessionurl]do=awardusers&amp;award_id=$award[award_id]") .
 						"";
 				print_cells_row($cell, 0, '', 1);
 				}

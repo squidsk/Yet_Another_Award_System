@@ -1,15 +1,14 @@
 <?php
 /*======================================================================*\
 || #################################################################### ||
-|| # Yet Another Award System v2.1.4 © by HacNho                      # ||
+|| # Yet Another Award System v4.0.3 © by HacNho                      # ||
 || # Copyright (C) 2005-2007 by HacNho, All rights reserved.          # ||
 || # ---------------------------------------------------------------- # ||
-|| # For use with vBulletin Version 3.6.x                             # ||
+|| # For use with vBulletin Version 4.1.12                             # ||
 || # http://www.vbulletin.com | http://www.vbulletin.com/license.html # ||
 || # Discussion and support available at                              # ||
 || # http://www.vbulletin.org/forum/showthread.php?t=94836            # ||
 || # ---------------------------------------------------------------- # ||
-|| # CVS: $RCSfile: admincp/award_cat.php,v 2.1.4 - Revision: 070324  # ||
 || #################################################################### ||
 \*======================================================================*/
 

@@ -1,7 +1,19 @@
+4.0.3 RELEASE:  (06/13/2012)
+    * Fixed - Various install/uninstall code issues
+    * Fixed - User profile tab graphical issues
+    * Fixed - Recommend/request award showing an error message, in certain circumstances, when there's no error
+    * Fixed - Various links not using properly escaped & (i.e. should be &amp; instead of &)
+    * Fixed - Code that generated invalid xhtml
+    * Fixed - Compatibility with other mods (e.g. vbsso)
+    * Fixed - Setting determining which side of the memberprofile the awards tab should appear on not working
+    * Ported - Fix from 3.8.4 for admincp for usernames with ' to modcp
+    * Changed - Style of the awards tab on the user's profile page to better match with the standard tabs
+    * Changed - Style for award icons and images so they are both vertically and horizontally centered in their row (awards.php & user profile)
+    * Updated - Version in version phrase
+
 4.0.2 PATCH 1:  (05/16/2010)
     * Fixed - Possible XSS Exploit in recommend_award.php and request_award.php
       award_request_reason and award_request_recipient_name variables changed to "TYPE_NOHTML"
-   
     * Date in change log of 4.0.2 release
     * Updated Version in version phrase
 

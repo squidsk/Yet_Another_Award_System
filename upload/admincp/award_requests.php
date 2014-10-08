@@ -68,7 +68,7 @@ WHERE a.award_req_aid = award.award_id AND a.award_rec_uid = vb.userid AND a.awa
 		$cell[] = $celldata[UserFor];
 		$cell[] = $celldata[award_name];
 		$cell[] = $celldata[award_req_reason];
-		$cell[] = "<a href='award.php?do=awardusers&award_id=$celldata[award_req_aid]&user_id=$celldata[award_rec_uid]&issue_reason=$celldata[award_req_reason]'>Grant</a><br /><a href='award_requests.php?do=delete&taskid=$celldata[award_req_id]'>Delete</a>";
+		$cell[] = "<a href='award.php?do=awardusers&amp;award_id=$celldata[award_req_aid]&amp;user_id=$celldata[award_rec_uid]&amp;issue_reason=$celldata[award_req_reason]'>Grant</a><br /><a href='award_requests.php?do=delete&amp;taskid=$celldata[award_req_id]'>Delete</a>";
 		
 	print_cells_row($cell, 0, '', 1);
 	}

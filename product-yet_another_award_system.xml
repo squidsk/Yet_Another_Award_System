@@ -3,7 +3,7 @@
 <product productid="yet_another_award_system" active="1">
 	<title>Yet Another Award System 4.0</title>
 	<description>Yet Another Awards System for vBulletin 4.0.x</description>
-	<version>4.0.2.1</version>
+	<version>4.0.3</version>
 	<url>http://www.vbulletin.org/forum/showthread.php?t=232684</url>
 	<versioncheckurl><![CDATA[http://www.vbulletin.org/forum/misc.php?do=checkversion&t=232684]]></versioncheckurl>
 	<dependencies>
@@ -11,7 +11,8 @@
 	</dependencies>
 	<codes>
 		<code version="2.0.0">
-			<installcode><![CDATA[						// PRE-PRODUCT MANAGEMENT VERSION CHECKING
+			<installcode><![CDATA[
+				// PRE-PRODUCT MANAGEMENT VERSION CHECKING
 				$db->reporterror = 0;
 				// Version checking for 1.0.0.
 				$award_table = $db->query_first("SELECT award_id FROM ".TABLE_PREFIX."award");
@@ -27,11 +28,11 @@
 					$db->query_write("DELETE FROM ".TABLE_PREFIX."setting WHERE grouptitle LIKE 'awards'");
 					$db->query_write("DELETE FROM ".TABLE_PREFIX."phrase WHERE (varname LIKE '%award%' OR varname LIKE 'setting_aw%') AND languageid = 0");
 				}
-			
+
 				// NEW INSTALL CODE
 				if ($installed_version == null) {
 			
-					echo "Adding Awards Tables<br /><br />";
+					echo "<b><font color=\"blue\">Adding Awards Tables</font></b><br /><br />";
 					$db->query_write("CREATE TABLE " . TABLE_PREFIX . "award (
 						  award_id smallint(5) unsigned NOT NULL auto_increment,
 						  award_cat_id smallint(5) NOT NULL default '1',
@@ -41,7 +42,7 @@
 						  award_img_url varchar(225) NOT NULL default '',
 						  award_displayorder smallint(5) NOT NULL default '0',
 						  PRIMARY KEY  (award_id)
-						) TYPE=MyISAM
+						) ENGINE=MyISAM
 					");
 					echo "<font size=\"1\">Added Table - award</font><br />";
 			
@@ -52,10 +53,9 @@
 						  issue_reason varchar(255) NOT NULL default '',
 						  issue_time int(10) NOT NULL default '0',
 						  PRIMARY KEY  (issue_id)
-						) TYPE=MyISAM
+						) ENGINE=MyISAM
 					");
 					echo "<font size=\"1\">Added Table - award_user</font><br />";
-			
 					$db->query_write("CREATE TABLE " . TABLE_PREFIX . "award_cat (
 						  award_cat_id mediumint(8) unsigned NOT NULL auto_increment,
 						  award_cat_title varchar(100) NOT NULL default '',
@@ -64,140 +64,163 @@
 						  award_cat_parentid mediumint(8) NOT NULL default '-1',
 						  PRIMARY KEY  (award_cat_id),
 						  KEY award_cat_order (award_cat_displayorder)
-						) TYPE=MyISAM
+						) ENGINE=MyISAM
 					");
 					echo "<font size=\"1\">Added Table - award_cat</font><br />";
-			
+					echo "<br /><b><font color=\"blue\">Tables Added Successfully</font></b><br />";
+					echo "<br />";
 					$db->query_write("
 						INSERT INTO " . TABLE_PREFIX . "award_cat 
 							(award_cat_id, award_cat_title, award_cat_desc, award_cat_displayorder, award_cat_parentid) 
 						VALUES (1, 'Default', 'Default category', 1, -1)
 					");
 					echo "<font size=\"1\">Inserted Default Catergory to table - award_cat</font><br />";
-			
 					$db->query_write("
 						INSERT INTO " . TABLE_PREFIX . "award 
 							(award_id, award_cat_id,  award_name, award_desc, award_icon_url, award_img_url, award_displayorder) 
 						VALUES (1, 1, 'Default Blue', 'This is a default medal', '". $vbulletin->options['bburl'] ."/images/medals/medal-blue.gif','". $vbulletin->options['bburl'] ."/images/medals/medal-blue-gold.gif', 1)
 					");
-					
 					$db->query_write("
 						INSERT INTO " . TABLE_PREFIX . "award 
 							(award_id, award_cat_id,  award_name, award_desc, award_icon_url, award_img_url, award_displayorder) 
 						VALUES (2, 1, 'Default Red', 'This is a default medal', '". $vbulletin->options['bburl'] ."/images/medals/medal-red.gif','". $vbulletin->options['bburl'] ."/images/medals/medal-red-gold.gif', 1)
 					");
-					
 					$db->query_write("
 						INSERT INTO " . TABLE_PREFIX . "award 
 							(award_id, award_cat_id,  award_name, award_desc, award_icon_url, award_img_url, award_displayorder) 
 						VALUES (3, 1, 'Default Green', 'This is a default medal', '". $vbulletin->options['bburl'] ."/images/medals/medal-green.gif','". $vbulletin->options['bburl'] ."/images/medals/medal-star2.gif', 1)
 					");
-					
 					echo "<font size=\"1\">Inserted Default Awards to table - award</font><br />";
-
+				echo "<br /><b><font color=\"blue\">Default Values Inserted Successfully</font></b><br />";
+				echo "<br />";
 				}
-			
 				$db->reporterror = 1;
 			]]></installcode>
-			<uninstallcode><![CDATA[				$db->reporterror = 0;
-
+			<uninstallcode><![CDATA[
+				$db->reporterror = 0;
 				$db->query_write("DROP TABLE IF EXISTS " . TABLE_PREFIX . "award");
 				echo "<font size=\"1\">Removed table - award</font><br />";
 				$db->query_write("DROP TABLE IF EXISTS " . TABLE_PREFIX . "award_user");
 				echo "<font size=\"1\">Removed table - award_user</font><br />";
 				$db->query_write("DROP TABLE IF EXISTS " . TABLE_PREFIX . "award_cat");
 				echo "<font size=\"1\">Removed table - award_cat</font><br />";
-				
-				echo "<br /><b><font color=\"blue\">Tables Removed Successfully</font></b><br />";
+				echo "<br /><b><font color=\"blue\">YaAS Removed Successfully</font></b><br />";
 				echo "<br />";
-
 				$db->reporterror = 1;
 			]]></uninstallcode>
 		</code>
 		<code version="2.1.0">
-			<installcode><![CDATA[$db->reporterror = 0;
-
-				$db->query_write("ALTER TABLE " . TABLE_PREFIX . "award ADD award_allowrequest TINYINT( 1 ) DEFAULT 1 NOT NULL,ADD award_active TINYINT( 1 ) DEFAULT 1 NOT NULL");
+			<installcode><![CDATA[
+				$db->reporterror = 0;
+				$db->query_write("ALTER TABLE " . TABLE_PREFIX . "award ADD COLUMN award_allowrequest TINYINT( 1 ) DEFAULT 1 NOT NULL,ADD award_active TINYINT( 1 ) DEFAULT 1 NOT NULL");
 				echo "<font size=\"1\">Alter table - award</font><br />";
-
 				$db->query_write("ALTER TABLE " . TABLE_PREFIX . "usergroup ADD COLUMN awardpermissions INT UNSIGNED NOT NULL DEFAULT '1'");
 				echo "<font size=\"1\">Alter table - usergroup</font><br />";
+				$db->reporterror = 1;
 
-				
-				echo "<br /><b><font color=\"blue\">Tables Altered Successfully</font></b><br />";
-				echo "<br />";
+				// Rebuild Bitfields
+				require_once(DIR . '/includes/class_bitfield_builder.php');
+				vB_Bitfield_Builder::save($db);
+				build_forum_permissions();
+			]]></installcode>
+			<uninstallcode><![CDATA[
+				$db->reporterror = 0;
+				// drop the extra columns needed too
+				$db->query_write("ALTER TABLE " . TABLE_PREFIX . "award DROP COLUMN award_allowrequest");
+				echo "<font size=\"1\">Alter table - award</font><br />";
+				$db->query_write("ALTER TABLE " . TABLE_PREFIX . "usergroup DROP COLUMN awardpermissions");
+				echo "<font size=\"1\">Alter table - usergroup</font><br />";
+				$db->reporterror = 1;
 
-$db->reporterror = 1;
-
- // Rebuild Bitfields
-require_once(DIR . '/includes/class_bitfield_builder.php');
-vB_Bitfield_Builder::save($db);
-build_forum_permissions();  ]]></installcode>
-			<uninstallcode><![CDATA[$db->reporterror = 0;
-// drop the extra columns needed too
-$db->query_write("ALTER TABLE " . TABLE_PREFIX . "usergroup DROP COLUMN awardpermissions");
-// Rebuild Bitfields
-require_once(DIR . '/includes/class_bitfield_builder.php');
-vB_Bitfield_Builder::save($db);
-build_forum_permissions();
-$db->reporterror = 1;]]></uninstallcode>
+				// Rebuild Bitfields
+				require_once(DIR . '/includes/class_bitfield_builder.php');
+				vB_Bitfield_Builder::save($db);
+				build_forum_permissions();
+			]]></uninstallcode>
 		</code>
 		<code version="2.1.3">
-			<installcode><![CDATA[$db->reporterror = 0;			
-$db->query_write("ALTER TABLE `award_user` CHANGE `issue_reason` `issue_reason` MEDIUMTEXT NOT NULL");
-echo "<font size=\"1\">Alter table - 2.1.3</font><br />";
-$db->reporterror = 1;]]></installcode>
-			<uninstallcode />
-		</code>
-		<code version="2.1.4">
-			<installcode><![CDATA[$db->reporterror = 0;
-$db->query_write("ALTER TABLE `award` CHANGE `award_desc` `award_desc` TEXT  NOT NULL");
-$db->query_write("ALTER TABLE `award_user` CHANGE `issue_reason` `issue_reason` TEXT NOT NULL");
-echo "<font size=\"1\">Alter table - 2.1.4</font><br />";
-$db->reporterror = 1;]]></installcode>
-			<uninstallcode />
-		</code>
-		<code version="3.8.3">
-			<installcode><![CDATA[$db->reporterror = 1;
-
-				$db->query_write("ALTER TABLE " . TABLE_PREFIX . "award ADD award_allowrecommend TINYINT( 1 ) DEFAULT 1 NOT NULL,ADD award_pointvalue TINYINT( 3 ) DEFAULT 0 NOT NULL");
-				echo "<font size=\"1\">Alter table - award - recommend and points</font><br />";
-				echo "<br /><b><font color=\"blue\">Tables Altered Successfully</font></b><br />";
-				echo "<br />";
-
-$db->reporterror = 1;
-
- // Rebuild Bitfields
-require_once(DIR . '/includes/class_bitfield_builder.php');
-vB_Bitfield_Builder::save($db);
-build_forum_permissions();  
-]]></installcode>
-			<uninstallcode />
-		</code>
-		<code version="4.0.1.2">
-			<installcode><![CDATA[						// CREATE AWARD REQUESTS TABLE
-				$db->reporterror = 1;
-		
-					$db->query_write("CREATE TABLE " . TABLE_PREFIX . "award_requests (
-						  award_req_id int(8) unsigned NOT NULL auto_increment,
-						  award_req_timestamp timestamp NOT NULL default CURRENT_TIMESTAMP,
-						  award_req_uid int(8) NULL,
-						  award_rec_uid int(8) NULL,
-						  award_req_aid int(8) NULL,
-						  award_req_reason varchar(512) NOT NULL,
-						  PRIMARY KEY  (award_req_id)
-						) 
-					");
-					echo "<font size=\"1\">Added Table - Award Requests</font><br />";
-
-			
+			<installcode><![CDATA[
+				$db->reporterror = 0;
+				$db->query_write("ALTER TABLE " . TABLE_PREFIX . "award_user CHANGE issue_reason issue_reason MEDIUMTEXT NOT NULL");
+				echo "<font size=\"1\">Alter table - 2.1.3</font><br />";
 				$db->reporterror = 1;
 			]]></installcode>
 			<uninstallcode />
 		</code>
-	
+		<code version="2.1.4">
+			<installcode><![CDATA[
+				$db->reporterror = 0;
+				$db->query_write("ALTER TABLE " . TABLE_PREFIX . "award CHANGE award_desc award_desc TEXT  NOT NULL");
+				$db->query_write("ALTER TABLE " . TABLE_PREFIX . "award_user CHANGE issue_reason issue_reason TEXT NOT NULL");
+				echo "<font size=\"1\">Alter table - 2.1.4</font><br />";
+				$db->reporterror = 1;
+			]]></installcode>
+			<uninstallcode />
+		</code>
+		<code version="3.8.3">
+			<installcode><![CDATA[
+				$db->reporterror = 0;
+				$db->query_write("ALTER TABLE " . TABLE_PREFIX . "award ADD COLUMN award_allowrecommend TINYINT( 1 ) DEFAULT 1 NOT NULL,ADD award_pointvalue TINYINT( 3 ) DEFAULT 0 NOT NULL");
+				echo "<font size=\"1\">Alter table - award - recommend and points</font><br />";
+				echo "<br /><b><font color=\"blue\">Table Altered Successfully</font></b><br />";
+				echo "<br />";
+				$db->reporterror = 1;
+
+				// Rebuild Bitfields
+				require_once(DIR . '/includes/class_bitfield_builder.php');
+				vB_Bitfield_Builder::save($db);
+				build_forum_permissions();  
+			]]></installcode>
+			<uninstallcode><![CDATA[
+				$db->reporterror = 0;
+				$db->query_write("ALTER TABLE " . TABLE_PREFIX . "award DROP COLUMN award_allowrecommend");
+				echo "<font size=\"1\">Alter table - award</font><br />";
+				$db->reporterror = 1;
+			]]></uninstallcode>
+		</code>
+		<code version="4.0.1.2">
+			<installcode><![CDATA[
+				// CREATE AWARD REQUESTS TABLE
+				$db->reporterror = 0;
+
+				$db->query_write("CREATE TABLE " . TABLE_PREFIX . "award_requests (
+					  award_req_id int(8) unsigned NOT NULL auto_increment,
+					  award_req_timestamp timestamp NOT NULL default CURRENT_TIMESTAMP,
+					  award_req_uid int(8) NULL,
+					  award_rec_uid int(8) NULL,
+					  award_req_aid int(8) NULL,
+					  award_req_reason varchar(512) NOT NULL,
+					  PRIMARY KEY  (award_req_id)
+					) 
+				");
+				echo "<font size=\"1\">Added Table - Award Requests</font><br />";
+				echo "<br /><b><font color=\"blue\">Table Added Successfully</font></b><br />";
+				$db->reporterror = 1;
+			]]></installcode>
+			<uninstallcode><![CDATA[
+				$db->reporterror = 0;
+				$db->query_write("DROP TABLE IF EXISTS " . TABLE_PREFIX . "award_requests");
+				echo "<font size=\"1\">Removed table - award_requests</font><br />";
+				$db->reporterror = 1;
+			]]></uninstallcode>
+		</code>
+		<code version="4.0.3">
+			<installcode><![CDATA[
+				$db->reporterror = 0;
+				$tab_location = $db->query_first("SELECT value FROM " . TABLE_PREFIX . "setting WHERE varname = \"cat_yaas_stats_profile_pos\"");
+				$db->write("UPDATE " . TABLE_PREFIX . "setting SET value = \"" . ($tab_location['value'] == "left" ? "first" : "last") . "\" 
+				echo "<font size=\"1\">Updating Setting 'Profile: Tab Location'</font><br />";
+				$db->reporterror = 1;
+			]]></installcode>
+			<uninstallcode><![CDATA[
+				$db->reporterror = 0;
+				$tab_location = $db->query_first("SELECT value FROM " . TABLE_PREFIX . "setting WHERE varname = \"cat_yaas_stats_profile_pos\"");
+				$db->write("UPDATE " . TABLE_PREFIX . "setting SET value = \"" . ($tab_location['value'] == "first" ? "left" : "right") . "\" 
+				echo "<font size=\"1\">Updating Setting 'Profile: Tab Location'</font><br />";
+				$db->reporterror = 1;
+			]]></uninstallcode>
+		</code>
 	</codes>
-	
 	<templates>
 		<template name="AWARDS" templatetype="template" date="1124684206" username="Cypher" version=""><![CDATA[{vb:stylevar htmldoctype}
 <html xmlns="http://www.w3.org/1999/xhtml" dir="{vb:stylevar textdirection}" lang="{vb:stylevar languagecode}">
@@ -224,22 +247,22 @@ build_forum_permissions();
 
 </body>
 </html>]]></template>
-		<template name="awards_awardbit" templatetype="template" date="1133126780" username="Cypher" version=""><![CDATA[<tr>
+		<template name="awards_awardbit" templatetype="template" date="1340120669" username="squid" version="4.0.3"><![CDATA[<tr>
 <if condition="$vboptions[aw_showicon]">
-	<td align="center" class="blockrow">
-		<img src="$award[award_icon_url]" border="0">
+	<td valign="middle" align="center" class="blockrow">
+		<img src="$award[award_icon_url]" alt="$award[award_name]" border="0" />
 	</td>
 </if>
 
 <if condition="$vboptions[aw_showimage]">
-	<td valign="top" align="center" class="blockrow">
+	<td valign="middle" align="center" class="blockrow">
 		<a name="award$award[award_id]"></a>
-		<img src="$award[award_img_url]" alt="$award[award_name]" border="0">
+		<img src="$award[award_img_url]" alt="$award[award_name]" border="0" />
 	</td>
 </if>
 
 <if condition="$vboptions[aw_showdesc]">
-	<td class="blockrow"><br /><b><a href="awards.php?do=viewaward&award_id=$award[award_id]">$award[award_name]</a></b>
+	<td class="blockrow" valign="top"><b><a href="awards.php?do=viewaward&amp;award_id=$award[award_id]">$award[award_name]</a></b>
 		<div class="smallfont">$award[award_desc]</div>
 <if condition="$vboptions[aw_showmembers]">
 <hr style="border: 1px solid;" align="left" />
@@ -250,12 +273,12 @@ $vbphrase[users_with_thisaward]: $aw_ui<br>
 		<else />
 			$vbphrase[no_award_users]
 		</if>
-	</td>
+	</div>
 </if>
-</div>
+</td>
 </if>
 <if condition="$vboptions[aw_actioncolumn]">
-	<td align="center" nowrap class="blockrow">
+	<td align="center" nowrap="nowrap" class="blockrow">
 <if condition="$vboptions[aw_requestaward]">
 <if condition="$award[award_allowrequest]">
 		<a href="request_award.php?$session[sessionurl]award_id=$award[award_id]">$vbphrase[request_award]</a>
@@ -271,8 +294,8 @@ $vbphrase[users_with_thisaward]: $aw_ui<br>
 </if>
 
 </tr>]]></template>
-		<template name="awards_awardusers_bit" templatetype="template" date="1124684261" username="Cypher" version=""><![CDATA[, <a href="member.php?$session[sessionurl]u=$awardusers[userid]&tab=myawards#award">$awardusers[username]</a>]]></template>
-		<template name="awards_bit" templatetype="template" date="1174777642" username="Cypher" version=""><![CDATA[<a href="member.php?$session[sessionurl]u=$award[userid]&tab=myawards#aw_issue$award[issue_id]">
+		<template name="awards_awardusers_bit" templatetype="template" date="1340118998" username="squid" version="4.0.3"><![CDATA[, <a href="member.php?$session[sessionurl]u=$awardusers[userid]&amp;tab=myawards#award">$awardusers[username]</a>]]></template>
+		<template name="awards_bit" templatetype="template" date="1340119078" username="squid" version="4.0.3"><![CDATA[<a href="member.php?$session[sessionurl]u=$award[userid]&amp;tab=myawards#aw_issue$award[issue_id]">
 
 <img border="0" src="$award[award_icon_url]" alt="$award[award_name]  
 
@@ -326,16 +349,69 @@ $awardsbits
 
 <br />]]></template>
 		<template name="awards_categorybit" templatetype="template" date="1124684291" username="Cypher" version=""><![CDATA[<a href="awards.php?$session[sessionurl]award_cat_id=$award_cat[award_cat_id]" name="award_cat$award_cat[award_cat_id]">$award_cat[award_cat_title]</a>]]></template>
-		<template name="awards_postbit_display" templatetype="template" date="1133134090" username="Cypher" version=""><![CDATA[
-<!-- show awards -->
+		<template name="awards_css.css" templatetype="template" date="1202279745" username="Cypher" version="4.0.0"><![CDATA[
+/* Begin Style 1 Fieldset Formatting*/
+
+fieldset {
+  padding-left: 4px;
+  border: 1px solid rgb(15, 16, 19);
+  }
+
+legend {
+
+ }
+
+/* End Style 1 Fieldset Formatting*/
+
+DIV.awards_postbit_style2 {
+ PADDING-LEFT: 2px;
+}
+
+DIV.awards_postbit_style3 {
+ PADDING-LEFT: 2px;
+}
+
+/* Begin Postbit Custom Formatting*/
+DIV.awards_postbit_customcss {
+ PADDING-LEFT: 2px;
+}
+
+DIV.awards_showcase_headtext {
+
+}
+
+DIV.awards_showcase_awarddisplay {
+
+}
+
+DIV.awards_showcase_infodisplay {
+
+}
+/* End PostbitCustom Formatting*/
+
+
+]]></template>
+		<template name="awards_navbar_link" templatetype="template" date="1340119112" username="squid" version="4.0.3"><![CDATA[<vb:if condition="$vboptions['selectednavtab'] == 'awards'">
+<li class="selected">
+	<a class="navtab" href="awards.php{vb:raw session.sessionurl_q}">{vb:rawphrase awards}</a>
+	<ul class="floatcontainer">
+		<li><a href="member.php?u={vb:var bbuserinfo.userid}
+&amp;tab=myawards">{vb:rawphrase my_awards}</a></li>
+	</ul>
+</li>
+<vb:else />
+	<li><a class="navtab" href="awards.php{vb:raw session.sessionurl_q}">{vb:rawphrase awards}</a></li>
+</vb:if>
+]]></template>
+		<template name="awards_postbit_display" templatetype="template" date="1340124474" username="squid" version="4.0.3"><![CDATA[<!-- show awards -->
 <if condition="$post[showuserawards]">
 <br />
-<fieldset><legend><a href="member.php?u=$post[userid]&tab=myawards" title="$vbphrase[more_awards]">$vbphrase[award_showcase]</a></legend>
+<fieldset><legend><a href="member.php?u=$post[userid]&amp;tab=myawards" title="$vbphrase[more_awards]">$vbphrase[award_showcase]</a></legend>
 	<div class="awards_showcase_awarddisplay">$post[userawards]</div>
 	<div class="awards_showcase_infodisplay">
-		<a href="member.php?u=$post[userid]&tab=myawards" title="$vbphrase[more_awards]">$vbphrase[total_awards]</a>: $post[num_awards]
+		<a href="member.php?u=$post[userid]&amp;tab=myawards" title="$vbphrase[more_awards]">$vbphrase[total_awards]</a>: $post[num_awards]
 		<if condition="$vboptions[aw_points]"><br />
-			<a href="member.php?u=$post[userid]&tab=myawards" title="$vbphrase[more_awards]">$vbphrase[total_points]</a>: $post[total_points]
+			<a href="member.php?u=$post[userid]&amp;tab=myawards" title="$vbphrase[more_awards]">$vbphrase[total_points]</a>: $post[total_points]
 		</if>
 	</div>
 </fieldset>
@@ -343,15 +419,31 @@ $awardsbits
 </if>
 <!-- /show awards -->
 ]]></template>
-		<template name="awards_postbit_display_style2" templatetype="template" date="1133134090" username="Cypher" version=""><![CDATA[
-<!-- show awards -->
+		<template name="awards_postbit_display_customcss" templatetype="template" date="1340124779" username="squid" version="4.0.3"><![CDATA[<!-- show awards -->
+<if condition="$post[showuserawards]">
+<br />
+<div class="awards_postbit_customcss">
+	<div class="awards_showcase_headtext"><a href="member.php?u=$post[userid]&amp;tab=myawards" title="$vbphrase[more_awards]">$vbphrase[award_showcase]</a></div>
+	<div class="awards_showcase_awarddisplay">$post[userawards]</div>
+	<div class="awards_showcase_infodisplay">
+		<a href="member.php?u=$post[userid]&amp;tab=myawards" title="$vbphrase[more_awards]">$vbphrase[total_awards]</a>: $post[num_awards]
+		<if condition="$vboptions[aw_points]"><br />
+			<a href="member.php?u=$post[userid]&amp;tab=myawards" title="$vbphrase[more_awards]">$vbphrase[total_points]</a>: $post[total_points]
+		</if>
+	</div>
+</div>
+<br />
+</if>
+<!-- /show awards -->
+]]></template>
+		<template name="awards_postbit_display_style2" templatetype="template" date="1340124814" username="squid" version="4.0.3"><![CDATA[<!-- show awards -->
 <if condition="$post[showuserawards]">
 <div class="awards_postbit_style2">
 	<div class="awards_showcase_awarddisplay">$post[userawards]</div>
 	<div class="awards_showcase_infodisplay">
-		<a href="member.php?u=$post[userid]&tab=myawards" title="$vbphrase[more_awards]">$vbphrase[total_awards]</a>: $post[num_awards]
+		<a href="member.php?u=$post[userid]&amp;tab=myawards" title="$vbphrase[more_awards]">$vbphrase[total_awards]</a>: $post[num_awards]
 		<if condition="$vboptions[aw_points]"><br />
-			<a href="member.php?u=$post[userid]&tab=myawards" title="$vbphrase[more_awards]">$vbphrase[total_points]</a>: $post[total_points]
+			<a href="member.php?u=$post[userid]&amp;tab=myawards" title="$vbphrase[more_awards]">$vbphrase[total_points]</a>: $post[total_points]
 		</if>
 	</div>
 </div>
@@ -366,24 +458,6 @@ $awardsbits
 </div>
 </if>
 
-<!-- /show awards -->
-]]></template>
-		<template name="awards_postbit_display_customcss" templatetype="template" date="1133134090" username="Cypher" version=""><![CDATA[
-<!-- show awards -->
-<if condition="$post[showuserawards]">
-<br />
-<div class="awards_postbit_customcss">
-	<div class="awards_showcase_headtext"><a href="member.php?u=$post[userid]&tab=myawards" title="$vbphrase[more_awards]">$vbphrase[award_showcase]</a></div>
-	<div class="awards_showcase_awarddisplay">$post[userawards]</div>
-	<div class="awards_showcase_infodisplay">
-		<a href="member.php?u=$post[userid]&tab=myawards" title="$vbphrase[more_awards]">$vbphrase[total_awards]</a>: $post[num_awards]
-		<if condition="$vboptions[aw_points]"><br />
-			<a href="member.php?u=$post[userid]&tab=myawards" title="$vbphrase[more_awards]">$vbphrase[total_points]</a>: $post[total_points]
-		</if>
-	</div>
-</div>
-<br />
-</if>
 <!-- /show awards -->
 ]]></template>
 		<template name="awards_recommend_form" templatetype="template" date="1202279745" username="Cypher" version="3.8.3"><![CDATA[
@@ -408,9 +482,9 @@ $navbar
 			<if condition="$award[award_desc]">
 <br />
 <div class="blockhead">$vbphrase[award_description]</div>
-<div class="blocksubhead">$award[award_desc]</div>						
+<div class="blocksubhead">$award[award_desc]</div>
 </if>
-	
+
 <br />
 
 <div class="blockhead">
@@ -419,7 +493,7 @@ $vbphrase[award_recommendformtitle]
 <div class="blocksubhead">
 $vbphrase[award_recommendformpurpose]
 <br /><br />
-			
+
 
 $vbphrase[username]
 				<table cellpadding="0" cellspacing="$stylevar[formspacer]" border="0" width="100%">
@@ -540,6 +614,7 @@ $vbphrase[award_request_recipient_name] : [b][url=$vboptions[bburl]/member.php?u
 -----------------------------------------------------
 $vbphrase[award_request_reason]
 
+
 $award_request_reason
 -----------------------------------------------------
 ]]></template>
@@ -569,29 +644,29 @@ $award_request_reason
 </table>
 </if>
 <!-- [END HACK='Yet Another Awards System hack' AUTHOR='HacNho'] -->]]></template>
-		<template name="awards_userawards_bit" templatetype="template" date="1174289504" username="Cypher" version=""><![CDATA[<tr>
+		<template name="awards_userawards_bit" templatetype="template" date="1340121517" username="squid" version="4.0.3"><![CDATA[<tr>
 	<if condition="$vboptions[aw_showicon]">
-		<td class="$bgclass" align="center"><br />
-			<img src="$award[award_icon_url]" border="0">
+		<td class="$bgclass" valign="middle" align="center">
+			<img src="$award[award_icon_url]" border="0" alt="$award[award_name]" />
 		</td>
 	</if>
 	<if condition="$vboptions[aw_showimage]">
-		<td class="$bgclass" valign="top" align="center"><br />
+		<td class="$bgclass" valign="middle" align="center">
 			<a href="awards.php?$session[sessionurl]#award$award[award_id]">
-			<img src="$award[award_img_url]" border="0"></a>
+			<img src="$award[award_img_url]" border="0" alt="$award[award_name]" /></a>
 		</td>
 	</if>
 	
-	<td class="$bgclass" valign="top"><br />
+	<td class="$bgclass" valign="top">
 		<a name="aw_issue$award[issue_id]"></a>
-		$vbphrase[award_name]: <b>$award[award_name]</b><br>
+		$vbphrase[award_name]: <b>$award[award_name]</b><br />
 		$award[award_desc]
 <div style="font-size:11px">
 		<fieldset class="fieldset">
 			<table cellpadding="0" cellspacing="$stylevar[formspacer]" border="0">
 			<tr>
 				<td>
-					<i>$vbphrase[award_time]: $award_issue_date $award_issue_time<br />
+					<i>$vbphrase[award_time]: $award_issue_date $award_issue_time</i><br />
 					<i>$vbphrase[award_reason]: $award[issue_reason]</i>
 				</td>
 			</tr>
@@ -622,7 +697,7 @@ $vbphrase[award]: $award[award_name]
 <if condition="$award[award_desc]">
 <br />
 <div class="blockhead">$vbphrase[award_description]</div>
-<div class="blocksubhead">$award[award_desc]</div>						
+<div class="blocksubhead">$award[award_desc]</div>
 </if>
 	
 <br />
@@ -633,7 +708,8 @@ $vbphrase[award]: $award[award_name]
 
 <if condition="$awarduserslist">
 <b>$awarduserslist</b>
-<else />						$vbphrase[no_award_users]
+<else />
+$vbphrase[no_award_users]
 </if>
 
 </div>
@@ -643,15 +719,12 @@ $vbphrase[award]: $award[award_name]
 $footer
 </body>
 </html>]]></template>
-		<template name="memberinfo_block_myawards" templatetype="template" date="1202279745" username="Cypher" version="1.0.0"><![CDATA[
-<div id="view-myawards" <vb:if condition="$selected_tab == 'myawards'"> class="selected_view_section"<vb:else />class="view_section"</vb:if>
-<br />
-<div>
+		<template name="memberinfo_block_myawards" templatetype="template" date="1340122294" username="squid" version="4.0.3"><![CDATA[<div id="view-myawards" <vb:if condition="$selected_tab == 'myawards'"> class="selected_view_section"<vb:else />class="view_section"</vb:if>>
 
-<div class="blockhead">
-{vb:rawphrase award_showcase} - {vb:raw $block_data[num]} {vb:rawphrase awards} <vb:if condition="$vboptions[aw_points]"> - {vb:raw $block_data[total_points]} {vb:rawphrase points}</vb:if>
+<div class="blocksubhead subsectionhead userprof_headers userprof_headers_border">
+<h4 class="subsectionhead-understate">{vb:rawphrase award_showcase} - {vb:raw $block_data[num]} {vb:rawphrase awards} <vb:if condition="$vboptions[aw_points]"> - {vb:raw $block_data[total_points]} {vb:rawphrase points}</vb:if></h4>
 </div>
-<div class="blockbody">
+<div class="subsection">
 	<table width="100%">
 		<tr align="center">
 			<vb:if condition="$vboptions[aw_showicon]"><th class="blocksubhead" nowrap="nowrap">{vb:rawphrase award_icon}</th></vb:if>
@@ -665,63 +738,20 @@ $footer
 
 
 ]]></template>
-		<template name="awards_navbar_link" templatetype="template" date="1202279745" username="Cypher" version="4.0.0"><![CDATA[
-<vb:if condition="$vboptions['selectednavtab'] == 'awards'">
-<li class="selected">
-	<a class="navtab" href="awards.php{vb:raw session.sessionurl_q}">{vb:rawphrase awards}</a>
-	<ul class="floatcontainer">
-		<li><a href="member.php?u={vb:var bbuserinfo.userid}
-&tab=myawards">{vb:rawphrase my_awards}</a></li>
-	</ul>
-</li>
-<vb:else />
-	<li><a class="navtab" href="awards.php{vb:raw session.sessionurl_q}">{vb:rawphrase awards}</a></li>
-</vb:if>
-]]></template>
-		<template name="awards_css.css" templatetype="template" date="1202279745" username="Cypher" version="4.0.0"><![CDATA[
-/* Begin Style 1 Fieldset Formatting*/
-
-fieldset {
-  padding-left: 4px;
-  border: 1px solid rgb(15, 16, 19);
-  }
-
-legend {
-
- }
-
-/* End Style 1 Fieldset Formatting*/
-
-DIV.awards_postbit_style2 {
- PADDING-LEFT: 2px;
-}
-
-DIV.awards_postbit_style3 {
- PADDING-LEFT: 2px;
-}
-
-/* Begin Postbit Custom Formatting*/
-DIV.awards_postbit_customcss {
- PADDING-LEFT: 2px;
-}
-
-DIV.awards_showcase_headtext {
-
-}
-
-DIV.awards_showcase_awarddisplay {
-
-}
-
-DIV.awards_showcase_infodisplay {
-
-}
-/* End PostbitCustom Formatting*/
-
-
-]]></template>
 	</templates>
+	<stylevardfns>
+	</stylevardfns>
+	<stylevars>
+	</stylevars>
 	<plugins>
+		<plugin active="1" executionorder="5">
+			<title>CSS - Cache Template</title>
+			<hookname>cache_templates</hookname>
+			<phpcode><![CDATA[if(THIS_SCRIPT=='css')
+{
+   $cache[] = 'awards_css.css';
+}]]></phpcode>
+		</plugin>
 		<plugin active="1" executionorder="5">
 			<title>YAAS - cache templates</title>
 			<hookname>cache_templates</hookname>
@@ -764,6 +794,14 @@ $cache = array_merge($cache, array(
 ]]></phpcode>
 		</plugin>
 		<plugin active="1" executionorder="5">
+			<title>CSS - Inject CSS into vBulletin</title>
+			<hookname>css_start</hookname>
+			<phpcode><![CDATA[if(in_array('vbulletin.css',$matches[1]))
+{
+   $matches[1][] = 'awards_css.css';
+}]]></phpcode>
+		</plugin>
+		<plugin active="1" executionorder="5">
 			<title>YAAS in Member Profile - Init</title>
 			<hookname>init_startup</hookname>
 			<phpcode><![CDATA[if (THIS_SCRIPT == "member" AND $vbulletin->options['cat_yaas_stats_profile']){
@@ -791,8 +829,9 @@ $cache = array_merge($cache, array(
 			<hookname>member_build_blocks_start</hookname>
 			<phpcode><![CDATA[$blocklist['myawards'] = array(
 	'class' => 'MyAwards',
-
-	'hook_location' => 'profile_tabs',
+	'title' => $vbphrase['awards'],
+	'options' => array( 'pagenumber' => $vbulletin->GPC['pagenumber']),
+	'hook_location' => ($vbulletin->options['cat_yaas_stats_profile_pos']=='left') ? 'profile_tabs_first' : 'profile_tabs_last',
 	'wrap' => false
 );
 
@@ -880,6 +919,21 @@ class vB_ProfileBlock_MyAwards extends vB_ProfileBlock
         }
     }
 }]]></phpcode>
+		</plugin>
+		<plugin active="0" executionorder="5">
+			<title>YAAS - Profile Tab</title>
+			<hookname>member_complete</hookname>
+			<phpcode><![CDATA[
+if ($selected_tab == 'myawards') 
+{ 
+$template_hook['profile_tabs_last'] .= '<dd class="selected"><a id="myawards-tab" href="'.$vbulletin->input->fetch_relpath().'#myawards" onclick="return tabViewPicker(this);">'.$vbphrase[awards].'</a></dd>'; 
+} 
+else 
+{ 
+$template_hook['profile_tabs_last'] .= '<dd><a id="
+myawards-tab" href="'.$vbulletin->input->fetch_relpath().'#myawards" onclick="return tabViewPicker(this);">'.$vbphrase[awards].'</a></dd>'; 
+}
+				]]></phpcode>
 		</plugin>
 		<plugin active="1" executionorder="5">
 			<title>YAAS - Give Award to User Nav</title>
@@ -1035,11 +1089,6 @@ if ((THIS_SCRIPT == 'showpost') OR (THIS_SCRIPT == 'private') OR (THIS_SCRIPT ==
 // [END HACK='Yet Another Award System' AUTHOR='HacNho']]]></phpcode>
 		</plugin>
 		<plugin active="1" executionorder="5">
-			<title>YAAS Template Group</title>
-			<hookname>template_groups</hookname>
-			<phpcode><![CDATA[$only = array_merge($only, array('awards' => 'Yet Another Awards System'));]]></phpcode>
-		</plugin>
-		<plugin active="1" executionorder="5">
 			<title>YAAS - Add Tab to Navbar</title>
 			<hookname>process_templates_complete</hookname>
 			<phpcode><![CDATA[if ($vbulletin->options['cat_yaas_display_navbar'] & 1)
@@ -1051,42 +1100,17 @@ if ((THIS_SCRIPT == 'showpost') OR (THIS_SCRIPT == 'private') OR (THIS_SCRIPT ==
 	$template_hook['navtab_middle'] .= vB_Template::create('awards_navbar_link')->render();
 }]]></phpcode>
 		</plugin>
-	<plugin active="1" executionorder="5">
-			<title>CSS - Cache Template</title>
-			<hookname>cache_templates</hookname>
-			<phpcode><![CDATA[if(THIS_SCRIPT=='css')
-{
-   $cache[] = 'awards_css.css';
-}]]></phpcode>
+		<plugin active="1" executionorder="5">
+			<title>YAAS Template Group</title>
+			<hookname>template_groups</hookname>
+			<phpcode><![CDATA[$only = array_merge($only, array('awards' => 'Yet Another Awards System'));]]></phpcode>
 		</plugin>
-		<plugin active="1" executionorder="5">
-			<title>CSS - Inject CSS into vBulletin</title>
-			<hookname>css_start</hookname>
-			<phpcode><![CDATA[if(in_array('vbulletin.css',$matches[1]))
-{
-   $matches[1][] = 'awards_css.css';
-}]]></phpcode>
-		</plugin>	
-		<plugin active="1" executionorder="5">
-			<title>YAAS - Profile Tab</title>
-			<hookname>member_complete</hookname>
-			<phpcode><![CDATA[
-if ($selected_tab == 'myawards') 
-{ 
-$template_hook['profile_tabs_last'] .= '<dd class="selected"><a id="myawards-tab" href="'.$vbulletin->input->fetch_relpath().'#myawards" onclick="return tabViewPicker(this);">'.$vbphrase[awards].'</a></dd>'; 
-} 
-else 
-{ 
-$template_hook['profile_tabs_last'] .= '<dd><a id="
-myawards-tab" href="'.$vbulletin->input->fetch_relpath().'#myawards" onclick="return tabViewPicker(this);">'.$vbphrase[awards].'</a></dd>'; 
-}
-				]]></phpcode>
-		</plugin>		
 	</plugins>
 	<phrases>
 		<phrasetype name="Award Phrases" fieldname="award">
 			<phrase name="award_formpurpose" date="0" username="" version=""><![CDATA[The purpose of this form is to allow you to request a award for yourself. This form will be reviewed and processed by administrators.]]></phrase>
 			<phrase name="award_formtitle" date="0" username="" version=""><![CDATA[Award Request Form]]></phrase>
+			<phrase name="award_recommend_post_title" date="0" username="" version=""><![CDATA[Award Recommendation for {1}! [{2}]]]></phrase>
 			<phrase name="award_recommendformpurpose" date="0" username="" version=""><![CDATA[The purpose of this form is to allow you to recommend an award for another member. This form will be reviewed and processed by administrators.]]></phrase>
 			<phrase name="award_recommendformtitle" date="0" username="" version=""><![CDATA[Award Recommendation Form]]></phrase>
 			<phrase name="award_request_completed" date="0" username="" version=""><![CDATA[Your request form has been submited to our representative to consider.<br>
@@ -1097,7 +1121,6 @@ Please click <a href="awards.php">HERE</a> to go back to awards list.]]></phrase
 			<phrase name="award_request_name" date="0" username="" version=""><![CDATA[What is your name?]]></phrase>
 			<phrase name="award_request_noawardid" date="0" username="" version=""><![CDATA[You need to select an award first! Click <a href="awards.php">HERE</a> to go back to award list!]]></phrase>
 			<phrase name="award_request_post_title" date="0" username="" version=""><![CDATA[Award Request for {1}! [{2}]]]></phrase>
-			<phrase name="award_recommend_post_title" date="0" username="" version=""><![CDATA[Award Recommendation for {1}! [{2}]]]></phrase>
 			<phrase name="award_request_reason" date="0" username="" version=""><![CDATA[Please explain why the listed recipient should receive the award.]]></phrase>
 			<phrase name="award_request_recipient_name" date="0" username="" version=""><![CDATA[Recipient username]]></phrase>
 			<phrase name="award_request_recipient_name_detail" date="0" username="" version=""><![CDATA[<i>Please use the users actual forum username otherwise data may not log correctly.</i>]]></phrase>
@@ -1120,7 +1143,14 @@ This action can not be un-done.]]></phrase>
 			<phrase name="award_allowrequest" date="0" username="" version=""><![CDATA[Allow  member to request this award?<br />
 				<i>You need to enable "Display Request Award Link" in Award System Settings, in order to use this</i>]]></phrase>
 			<phrase name="award_cat_manager" date="0" username="" version=""><![CDATA[Award Category Manager]]></phrase>
+			<phrase name="award_diagnostics" date="0" username="" version=""><![CDATA[Diagnostics]]></phrase>
 			<phrase name="award_manager" date="0" username="" version=""><![CDATA[Award Manager]]></phrase>
+			<phrase name="award_request_award_name" date="0" username="" version=""><![CDATA[Requested Award]]></phrase>
+			<phrase name="award_request_reason" date="0" username="" version=""><![CDATA[Requested Reason]]></phrase>
+			<phrase name="award_request_time" date="0" username="" version=""><![CDATA[Requested Time]]></phrase>
+			<phrase name="award_request_user_for" date="0" username="" version=""><![CDATA[Request For]]></phrase>
+			<phrase name="award_request_user_from" date="0" username="" version=""><![CDATA[Request From]]></phrase>
+			<phrase name="award_requests" date="0" username="" version=""><![CDATA[Award Requests]]></phrase>
 			<phrase name="award_sendemail" date="1174285472" username="Cypher" version=""><![CDATA[Notify user via Email]]></phrase>
 			<phrase name="award_sendpm" date="0" username="" version=""><![CDATA[Notify user via Private Message]]></phrase>
 			<phrase name="award_settings" date="0" username="" version=""><![CDATA[Award System Settings]]></phrase>
@@ -1128,14 +1158,6 @@ This action can not be un-done.]]></phrase>
 			<phrase name="award_version_info" date="0" username="" version=""><![CDATA[Version Information]]></phrase>
 			<phrase name="give_user_award" date="1174284722" username="Cypher" version=""><![CDATA[Give award to user]]></phrase>
 			<phrase name="give_user_award_desc" date="0" username="" version=""><![CDATA[Give award to user: Please provide userid or username of the member you want to add, with the reason why you want to give that person this award.]]></phrase>
-			<phrase name="award_diagnostics" date="0" username="" version=""><![CDATA[Diagnostics]]></phrase>
-			<phrase name="award_request_time" date="0" username="" version=""><![CDATA[Requested Time]]></phrase>
-			<phrase name="award_request_user_from" date="0" username="" version=""><![CDATA[Request From]]></phrase>
-			<phrase name="award_request_user_for" date="0" username="" version=""><![CDATA[Request For]]></phrase>
-			<phrase name="award_request_award_name" date="0" username="" version=""><![CDATA[Requested Award]]></phrase>
-			<phrase name="award_request_reason" date="0" username="" version=""><![CDATA[Requested Reason]]></phrase>
-			<phrase name="award_requests" date="0" username="" version=""><![CDATA[Award Requests]]></phrase>
-						
 		</phrasetype>
 		<phrasetype name="Permissions" fieldname="cppermission">
 			<phrase name="award_can_recommend_award" date="0" username="" version="3.8.3"><![CDATA[Can recommend awards]]></phrase>
@@ -1167,20 +1189,17 @@ The {$vbulletin->options['bbtitle']} staff]]></phrase>
 			<phrase name="award_pm" date="0" username="" version=""><![CDATA[Congratulations! You have got a new award!]]></phrase>
 		</phrasetype>
 		<phrasetype name="Error Messages" fieldname="error">
+			<phrase name="award_request_task_deleted" date="0" username="" version=""><![CDATA[Award Request Deleted]]></phrase>
 			<phrase name="deleted_award_successfully" date="0" username="" version=""><![CDATA[Deleted Award Successfully]]></phrase>
 			<phrase name="give_award_to_user_x_successfully" date="0" username="" version=""><![CDATA[Give Award to User {1} Successfully]]></phrase>
 			<phrase name="invalid_award_name_specified" date="0" username="" version=""><![CDATA[Invalid Award Name Specified]]></phrase>
 			<phrase name="no_awards_defined" date="0" username="" version=""><![CDATA[There are no awards defined]]></phrase>
 			<phrase name="removed_award_from_users_successfully" date="0" username="" version=""><![CDATA[Removed Award From Selected Users Successfully]]></phrase>
 			<phrase name="saved_award_named_x_successfully" date="0" username="" version=""><![CDATA[Saved Award Named {1} Successfully]]></phrase>
-			<phrase name="award_request_task_deleted" date="0" username="" version=""><![CDATA[Award Request Deleted]]></phrase>
 		</phrasetype>
 		<phrasetype name="GLOBAL" fieldname="global">
-			<phrase name="yaas_version" date="0" username="" version=""><![CDATA[<center><a href='http://www.vbulletin.org/forum/showthread.php?t=232684'>Yet Another Awards System</a> v4.0.2 PL1</center>]]></phrase>
 			<phrase name="aw_more_users" date="0" username="" version=""><![CDATA[...more &raquo;]]></phrase>
 			<phrase name="award" date="0" username="" version=""><![CDATA[Award]]></phrase>
-			<phrase name="my_awards" date="0" username="" version="4.0.0"><![CDATA[My Awards]]></phrase>
-			<phrase name="award_id" date="0" username="" version="4.0.0"><![CDATA[Award ID]]></phrase>
 			<phrase name="award_action_column" date="0" username="" version="3.8.3"><![CDATA[Actions]]></phrase>
 			<phrase name="award_cat_parent" date="0" username="" version=""><![CDATA[Parent Category ]]></phrase>
 			<phrase name="award_cat_title" date="0" username="" version=""><![CDATA[Award category title ]]></phrase>
@@ -1188,6 +1207,7 @@ The {$vbulletin->options['bbtitle']} staff]]></phrase>
 			<phrase name="award_description" date="1174282449" username="Cypher" version=""><![CDATA[Description]]></phrase>
 			<phrase name="award_icon" date="1174282401" username="Cypher" version=""><![CDATA[Icon]]></phrase>
 			<phrase name="award_icon_url" date="0" username="" version=""><![CDATA[Award Icon URL]]></phrase>
+			<phrase name="award_id" date="0" username="" version="4.0.0"><![CDATA[Award ID]]></phrase>
 			<phrase name="award_image" date="1174282424" username="Cypher" version=""><![CDATA[Image]]></phrase>
 			<phrase name="award_image_url" date="0" username="" version=""><![CDATA[Award Image URL]]></phrase>
 			<phrase name="award_information" date="0" username="" version=""><![CDATA[Award Information]]></phrase>
@@ -1212,6 +1232,7 @@ The {$vbulletin->options['bbtitle']} staff]]></phrase>
 			<phrase name="user_awards" date="0" username="" version=""><![CDATA[User Awards ]]></phrase>
 			<phrase name="users_with_awards" date="0" username="" version=""><![CDATA[Users Who Have Already Recieved Awards]]></phrase>
 			<phrase name="users_with_thisaward" date="0" username="" version=""><![CDATA[Members who received this award]]></phrase>
+			<phrase name="yaas_version" date="1338313529" username="squid" version="4.0.3"><![CDATA[<center><a href='http://www.vbulletin.org/forum/showthread.php?t=232684'>Yet Another Awards System</a> v4.0.3</center>]]></phrase>
 		</phrasetype>
 		<phrasetype name="vBulletin Settings" fieldname="vbsettings">
 			<phrase name="setting_aw_actioncolumn_desc" date="1174283089" username="Cypher" version="3.8.3"><![CDATA[Do you want to show the action coulumn in Awards list page]]></phrase>
