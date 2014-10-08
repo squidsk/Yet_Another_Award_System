@@ -1,0 +1,62 @@
+4.0.2 PATCH 1:  (05/16/2010)
+    * Fixed - Possible XSS Exploit in recommend_award.php and request_award.php
+      award_request_reason and award_request_recipient_name variables changed to "TYPE_NOHTML"
+   
+    * Date in change log of 4.0.2 release
+    * Updated Version in version phrase
+
+4.0.2 RELEASE:  (04/10/2010 5:30AM CDT)
+
+    * Fixed - Spacing on primary Awards Display page 
+    * Fixed - Display Order in AdminCP Options not saving properly 
+    * Fixed - "Awards" displaying on all profile tabs.
+    * Fixed - Award Profile Tab Phrased
+   
+    * Added - Award Recommendations and Requests are viewable in the AdminCP
+    * Added - Diagnostics Tab (Currently not used, place holder).
+
+    * Database - Database Errors on installation are now displayed.
+    * Database - award_requests table added
+
+    * Removed - Automation Phrases (Automation will be a seperate plugin)
+
+4.0.1 RELEASE:  * INTERNAL RELEASE *
+
+4.0.0 GOLD:  * INTERNAL RELEASE *
+
+4.0.0 RC1 RELEASE:  (01/13/2010 1:15AM CST)
+
+    * Fixed - Award Tab Display for vBulletin 4.0.1.
+
+4.0.0 BETA 3 RELEASE: (01/12/2010 5:45AM CST)
+
+    * Fixed - SQL Group By syntax when Points are enabled.
+    * Fixed - Issuing Awards to users with ' in usernames.
+    * Fixed - "Award System Settings" SettingGroup name.
+    * Fixed - Phrases for Award Request/Recommendation Settings.
+    * Fixed - All templates should be properly cached.
+    * Fixed - Inactive awards no longer display in postbit.
+    * Fixed - Postbit Sytle 1 Formatting. (Fieldset format in awards_css.css template)
+    * Fixed - Postbit Sytle 2 Formatting. (Moved closing </div>)
+    * Fixed - Awards display column formatting.
+
+    * Added - 'Custom CSS' Display Style. (Editable in awards_css.css template)
+
+    * Improved - Version Information in AdminCP.
+    * Improved - Award Name is added to Post/PM Title Recommendations/Requests.
+    * Improved - Postbit Display Location descriptions.
+
+4.0.0 BETA 2 RELEASE:
+
+    * Profile Tab is now working.
+      You may have to click on the awards tab twice to get the data to show. This is a bug in vBulletin that will hopefully be fixed in 4.0.1.
+    * Cleaner Awards Layout on the main Awards System page.
+    * With vBulletin changing a lot of the Style Variables, all "Styles" are now customizable via CSS in the template awards_css.css
+    * Fixed Category Depth bug on Awards System Page.
+    * ModCP/awards.php is working again.
+    * Fixed a few other minor bugs I stumbled across.
+    * Fixed text formatting on the Awards Request and Recommend pages.
+
+4.0.0 BETA RELEASE:
+
+    * Initial Release

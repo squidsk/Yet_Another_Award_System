@@ -1,0 +1,3 @@
+UPLOAD the /upload directory to your forum root.
+
+Import .XML

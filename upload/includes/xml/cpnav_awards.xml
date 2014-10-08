@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<navgroups product="yet_another_award_system">
+	<navgroup phrase="award_system">
+
+		<navoption displayorder="1">
+			<phrase>award_settings</phrase>
+			<link>options.php?dogroup=awards&amp;do=options</link>
+		</navoption>
+
+		<navoption displayorder="2">
+			<phrase>award_cat_manager</phrase>
+			<link>award_cat.php?do=modifycat</link>
+		</navoption>
+
+		<navoption displayorder="3">
+			<phrase>add_new_award</phrase>
+			<link>award.php?do=add</link>
+		</navoption>
+		
+		<navoption displayorder="4">
+			<phrase>award_manager</phrase>
+			<link>award.php?do=manage</link>
+		</navoption>
+		
+		<navoption displayorder="5">
+			<phrase>award_requests</phrase>
+			<link>award_requests.php?do=display</link>
+		</navoption>
+		
+		<navoption displayorder="98">
+			<phrase>award_diagnostics</phrase>
+			<link>award_diagnostics.php</link>
+		</navoption>
+		
+		<navoption displayorder="99">
+			<phrase>award_version_info</phrase>
+			<link>award_version_info.php</link>
+		</navoption>
+		
+	</navgroup>
+</navgroups>

@@ -1,0 +1,38 @@
+/* Begin Style 1 Fieldset Formatting*/
+
+fieldset {
+  padding-left: 4px;
+  border: 1px solid rgb(15, 16, 19);
+  }
+
+legend {
+
+ }
+
+/* End Style 1 Fieldset Formatting*/
+
+DIV.awards_postbit_style2 {
+ PADDING-LEFT: 2px;
+}
+
+DIV.awards_postbit_style3 {
+ PADDING-LEFT: 2px;
+}
+
+/* Begin Custom Formatting*/
+DIV.awards_postbit_customcss {
+ PADDING-LEFT: 2px;
+}
+
+DIV.awards_showcase_headtext {
+
+}
+
+DIV.awards_showcase_awarddisplay {
+
+}
+
+DIV.awards_showcase_infodisplay {
+
+}
+/* End Custom Formatting*/

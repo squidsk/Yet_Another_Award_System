@@ -1,0 +1,6 @@
+!!! MAKE SURE YOU BACK UP YOUR FORUM FILESYSTEM AND DATABASE BEFORE PROCEEDING !!!
+
+Install and use this software at your OWN risk.  The coders of this mod are NOT reponsible if something goes wrong with your forum.
+
+
+    * Usage of the Points System, and Award Automation require MySQL 5.0+

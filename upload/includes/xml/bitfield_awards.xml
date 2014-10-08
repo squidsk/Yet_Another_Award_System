@@ -1,0 +1,11 @@
+<bitfields product="yet_another_award_system">
+	<bitfielddefs>
+		<group name="ugp">
+			<group name="awardpermissions">
+				<bitfield name="canrequestaward" group="award_request_permissions" phrase="award_can_request_award" install="2,3,4,5,6,7">1</bitfield>
+				<bitfield name="canrecommendaward" group="award_request_permissions" phrase="award_can_recommend_award" install="2,3,4,5,6,7">2</bitfield>
+			</group>
+		</group>
+	</bitfielddefs>
+</bitfields>
+<!-- CVS: $RCSfile: bitfield_support.xml,v $ - $Revision: 1.0 $ -->
