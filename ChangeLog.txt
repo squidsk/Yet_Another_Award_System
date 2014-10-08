@@ -1,4 +1,17 @@
-4.0.4 RELEASE:
+4.0.5 RELEASE:  (29/01/2013)
+    * Fixed granting an award reqest/recommendation not deleting the request/recommendation
+    * Fixed requests not being displayed if the recipient or requestor accounts have been deleted
+    * Fixed emails not being sent when usernames are used to give an award and the send email option is chosen
+    * Fixed the award postbit display not always being in the correct location when using postbit_legacy
+    * Fixed the box around the fieldset being invisible (award postbit style 1) when css saved as a file
+    * Fixed the award postbit disappearing after editing a post
+    * Fixed deprecation errors due to php 5.3+ in various locations
+    * Restored the spacing between awards on the awards tab user profiles
+    * Renamed construct_depth_mark function to yaas_construct_depth_mark
+    * Updated - Version in version phrase
+    * Removed - Four plugins that are no longer used (CSS - Cache Template, YAAS - Profile Tab, YAAS in Member Profile - Cache Template, YAAS - postbit display start)
+
+4.0.4 RELEASE:  (14/10/2012)
     * Fixed - Award images with relative url not being dispalyed when an award is recommended/requested
     * Fixed - Fixed customizations from additional.css template not displaying for various templates
     * Fixed - Invalid xhtml in the awards_awardbit template (a <br> to a <br />)

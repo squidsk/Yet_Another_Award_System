@@ -1,7 +1,7 @@
 <?php
 /*======================================================================*\
 || #################################################################### ||
-|| # Yet Another Award System v4.0.4 © by HacNho                      # ||
+|| # Yet Another Award System v4.0.5 © by HacNho                      # ||
 || # Copyright (C) 2005-2007 by HacNho, All rights reserved.          # ||
 || # ---------------------------------------------------------------- # ||
 || # For use with vBulletin Version 4.1.12                            # ||
@@ -17,7 +17,7 @@ error_reporting(E_ALL & ~E_NOTICE);
 
 // ##################### DEFINE IMPORTANT CONSTANTS #######################
 define('NO_REGISTER_GLOBALS', 1);
-define('THIS_SCRIPT', 'awards.php');
+define('THIS_SCRIPT', 'YAAS_DISPLAY');
 
 // #################### PRE-CACHE TEMPLATES AND DATA ######################
 // get special phrase groups
@@ -43,7 +43,7 @@ $actiontemplates = array();
 // ########################## REQUIRE BACK-END ############################
 require_once('./global.php');
 require_once(DIR . '/includes/class_bbcode.php');
-$bbcode_parser =& new vB_BbCodeParser($vbulletin, fetch_tag_list());
+$bbcode_parser = new vB_BbCodeParser($vbulletin, fetch_tag_list());
 
 // #######################################################################
 // ######################## START MAIN SCRIPT ############################
@@ -94,9 +94,9 @@ function cache_award_cats($award_cat_id = -1, $depth = 0, $display_award_cat_id=
 }
 
 // ###################### Start makedepthmark #######################
-if(!function_exists('construct_depth_mark'))
+if(!function_exists('yaas_construct_depth_mark'))
 {
-	function construct_depth_mark($depth, $depthchar, $depthmark = '')
+	function yaas_construct_depth_mark($depth, $depthchar, $depthmark = '')
 	{
 	// repeats the supplied $depthmark for the number of times supplied by $depth
 	// and appends it onto $depthmark
@@ -214,26 +214,19 @@ $totalcols = $vbulletin->options['aw_showicon']+ $vbulletin->options['aw_showima
 			} //foreach $awardcache
 		} //if is_array
 
-			//- VB3 -// 
-			//eval('$award_categotybit = "'. construct_depth_mark($award_cat['depth'], '- - ', '') . fetch_template('awards_categorybit') . '";');
-			//- BEGIN VB4 -//
-			$templater = vB_Template::create('awards_categorybit');
-				$templater->register('award_cat', $award_cat);
-			$award_categotybit .= $templater->render();
-			$award_categotybit = construct_depth_mark($award_cat['depth'], '- - ', '');
-			//- VB3 -// 
-			// eval('$award_categories .= "' . fetch_template('awards_category') . '";');
-			//- BEGIN VB4 -//
-			$templater = vB_Template::create('awards_category');
-				$templater->register('award', $award);
-				$templater->register('award_cat', $award_cat);
-				$templater->register('awarduserslist', $awarduserslist);
-				$templater->register('aw_ui', $aw_ui);
-				$templater->register('award_categotybit', $award_categotybit);
-				$templater->register('awardsbits', $awardsbits);
-			$award_categories .= $templater->render();
-			//- END VB4 -//
-			
+		$templater = vB_Template::create('awards_categorybit');
+			$templater->register('award_cat', $award_cat);
+		$award_categotybit .= $templater->render();
+		$award_categotybit = yaas_construct_depth_mark($award_cat['depth'], '- - ', '');
+
+		$templater = vB_Template::create('awards_category');
+			$templater->register('award', $award);
+			$templater->register('award_cat', $award_cat);
+			$templater->register('awarduserslist', $awarduserslist);
+			$templater->register('aw_ui', $aw_ui);
+			$templater->register('award_categotybit', $award_categotybit);
+			$templater->register('awardsbits', $awardsbits);
+		$award_categories .= $templater->render();
 	} //foreach $award_cat_cache
 
 

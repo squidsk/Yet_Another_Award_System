@@ -1,7 +1,7 @@
 <?php
 /*======================================================================*\
 || #################################################################### ||
-|| # Yet Another Award System v4.0.4 © by HacNho                      # ||
+|| # Yet Another Award System v4.0.5 © by HacNho                      # ||
 || # Copyright (C) 2005-2007 by HacNho, All rights reserved.          # ||
 || # ---------------------------------------------------------------- # ||
 || # For use with vBulletin Version 4.1.12                            # ||
@@ -14,6 +14,8 @@
 
 // ####################### SET PHP ENVIRONMENT ###########################
 error_reporting(E_ALL & ~E_NOTICE);
+
+define('THIS_SCRIPT', 'YAAS_RECOMMEND');
 
 $globaltemplates = array(
 	'awards_recommend_form',

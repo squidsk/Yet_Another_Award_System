@@ -1,7 +1,7 @@
 <?php
 /*======================================================================*\
 || #################################################################### ||
-|| # Yet Another Award System v4.0.4 © by HacNho                      # ||
+|| # Yet Another Award System v4.0.5 © by HacNho                      # ||
 || # Copyright (C) 2005-2007 by HacNho, All rights reserved.          # ||
 || # ---------------------------------------------------------------- # ||
 || # For use with vBulletin Version 4.1.12                            # ||
@@ -26,7 +26,7 @@ $specialtemplates = array();
 // ########################## REQUIRE BACK-END ############################
 require_once('./global.php');
 require_once(DIR . '/includes/class_bbcode.php');
-$bbcode_parser =& new vB_BbCodeParser($vbulletin, fetch_tag_list());
+$bbcode_parser = new vB_BbCodeParser($vbulletin, fetch_tag_list());
 
 $this_script = 'award';
 
@@ -223,6 +223,7 @@ if ($_POST['do'] == 'doupdate')
 	'award_id'  => TYPE_INT, 
 	'award_name' => TYPE_STR, 
 	'award_desc' => TYPE_STR, 
+
 
 	'award_pointvalue' => TYPE_INT, 
 	'award_icon_url' => TYPE_STR, 
@@ -668,8 +669,6 @@ if ($_REQUEST['do'] == 'awardusers')
 {
 	$vbulletin->input->clean_array_gpc('r', array(
 		'award_id' => TYPE_INT,
-		'user_id' => TYPE_INT,
-		'issue_reason' => TYPE_STR
 	));
 	
 	if (!$vbulletin->GPC['award_id'])
@@ -692,49 +691,48 @@ if ($_REQUEST['do'] == 'awardusers')
 	}
 
 	// print award information	
-	   print_form_header();
-	   print_table_header(construct_phrase($vbphrase['x_y_id_z'], $vbphrase['award_name'], $award['award_name'], $vbulletin->GPC['award_id']), 5, 0);
-	   echo "
-	   <col align=\"center\" style=\"white-space:nowrap\"></col>
-	   <col width=\"50%\" align=\"$stylevar[left]\"></col>
-	   <col align=\"center\" style=\"white-space:nowrap\"></col>
-	   <col align=\"center\" style=\"white-space:nowrap\"></col>
-	   <col align=\"center\" style=\"white-space:nowrap\"></col>
-	   ";
-	
-		print_cells_row(array(
-			$vbphrase['award_name'],
-			$vbphrase['award_description'],
-			$vbphrase['award_icon'],
-			$vbphrase['award_image'],
-			$vbphrase['manage']
-	   ), 1, '', -1);
-	   
-	  echo "
-	  <tr>
-			<td class=\"$bgclass\"><strong>$award[award_name]</strong></td>
-			<td class=\"$bgclass\"><dfn>{$award[award_desc]}</dfn></td>
-			<td class=\"$bgclass\" align=\"center\"><img src=\"" . iif(substr($award[award_icon_url], 0, 7) != 'http://' AND substr($award[award_icon_url], 0, 1) != '/', '../', '') . "$award[award_icon_url]\" border=\"0\"></td>
-			<td class=\"$bgclass\" align=\"center\"><img src=\"" . iif(substr($award[award_img_url], 0, 7) != 'http://' AND substr($award[award_img_url], 0, 1) != '/', '../', '') . "$award[award_img_url]\" border=\"0\"></td>
-			<td class=\"$bgclass\">" .
-					construct_link_code(
-						$vbphrase['edit'], "award.php?"
-						. $vbulletin->session->vars['sessionurl']
-						. "do=edit"
-						. "&amp;award_id=".$vbulletin->GPC['award_id']
-					) .
-					construct_link_code(
-						$vbphrase['delete'], "award.php?"
-						. $vbulletin->session->vars['sessionurl']
-						. "do=remove"
-						. "&amp;award_id=" . $vbulletin->GPC['award_id']
-					) .
-			"</td>
-	
-	  </tr>";
-		print_table_footer();
+	print_table_start();
 
+	echo "
+	<col align=\"center\" style=\"white-space:nowrap\"></col>
+	<col width=\"50%\" align=\"$stylevar[left]\"></col>
+	<col align=\"center\" style=\"white-space:nowrap\"></col>
+	<col align=\"center\" style=\"white-space:nowrap\"></col>
+	<col align=\"center\" style=\"white-space:nowrap\"></col>
+	";
 
+	print_table_header(construct_phrase($vbphrase['x_y_id_z'], $vbphrase['award_name'], $award['award_name'], $vbulletin->GPC['award_id']), 5, 0);
+
+	print_cells_row(array(
+		$vbphrase['award_name'],
+		$vbphrase['award_description'],
+		$vbphrase['award_icon'],
+		$vbphrase['award_image'],
+		$vbphrase['manage']
+	), 1, '', -1);
+   
+	echo "
+	<tr>
+		<td class=\"$bgclass\"><strong>$award[award_name]</strong></td>
+		<td class=\"$bgclass\"><dfn>{$award[award_desc]}</dfn></td>
+		<td class=\"$bgclass\" align=\"center\"><img src=\"" . iif(substr($award[award_icon_url], 0, 7) != 'http://' AND substr($award[award_icon_url], 0, 1) != '/', '../', '') . "$award[award_icon_url]\" border=\"0\"></td>
+		<td class=\"$bgclass\" align=\"center\"><img src=\"" . iif(substr($award[award_img_url], 0, 7) != 'http://' AND substr($award[award_img_url], 0, 1) != '/', '../', '') . "$award[award_img_url]\" border=\"0\"></td>
+		<td class=\"$bgclass\">" .
+				construct_link_code(
+					$vbphrase['edit'], "award.php?"
+					. $vbulletin->session->vars['sessionurl']
+					. "do=edit"
+					. "&amp;award_id=".$vbulletin->GPC['award_id']
+				) .
+				construct_link_code(
+					$vbphrase['delete'], "award.php?"
+					. $vbulletin->session->vars['sessionurl']
+					. "do=remove"
+					. "&amp;award_id=" . $vbulletin->GPC['award_id']
+				) .
+		"</td>
+	</tr>";
+	print_table_footer(2, '', '', false);
 
 // print give award to user block
 	print_form_header('award', 'dogiveaward');
@@ -744,9 +742,9 @@ if ($_REQUEST['do'] == 'awardusers')
 
 	print_table_header("$vbphrase[add] $vbphrase[user_awards]", 2, 0);
 	print_description_row($vbphrase[give_user_award_desc]);
-	print_input_row($vbphrase['userid'], 'awarduserid', $vbulletin->GPC['user_id']);
+	print_input_row($vbphrase['userid'], 'awarduserid');
 	print_input_row($vbphrase['username'], 'awardusername');
-	print_textarea_row($vbphrase['award_reason'], 'issue_reason', $vbulletin->GPC['issue_reason'], 3, 33);
+	print_textarea_row($vbphrase['award_reason'], 'issue_reason', '', 3, 33);
 	print_checkbox_row($vbphrase['award_sendpm'], 'award_sendpm');
 	print_checkbox_row($vbphrase['award_sendemail'], 'award_sendemail',0);
 
