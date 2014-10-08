@@ -1,13 +1,13 @@
 <?php
 /*======================================================================*\
 || #################################################################### ||
-|| # Yet Another Award System v4.0.3 © by HacNho                      # ||
+|| # Yet Another Award System v4.0.4 © by HacNho                      # ||
 || # Copyright (C) 2005-2007 by HacNho, All rights reserved.          # ||
 || # ---------------------------------------------------------------- # ||
-|| # For use with vBulletin Version 4.1.12                             # ||
+|| # For use with vBulletin Version 4.1.12                            # ||
 || # http://www.vbulletin.com | http://www.vbulletin.com/license.html # ||
 || # Discussion and support available at                              # ||
-|| # http://www.vbulletin.org/forum/showthread.php?t=94836            # ||
+|| # http://www.vbulletin.org/forum/showthread.php?t=232684           # ||
 || # ---------------------------------------------------------------- # ||
 || #################################################################### ||
 \*======================================================================*/
@@ -59,7 +59,7 @@ if ($_REQUEST['do']=='submit')
 			//'award_request_name' => TYPE_STR,
 			'award_request_recipient_name' => TYPE_NOHTML,
 			'award_request_reason' => TYPE_NOHTML,
-			'award_request_uid' => TYPE_UNIT,
+			'award_request_uid' => TYPE_UINT,
 	));
 
 	//$vbulletin->GPC['award_request_recipient_name'] = $vbulletin->userinfo['username'];
@@ -94,6 +94,9 @@ if ($_REQUEST['do']=='submit')
 		$templater->register('award_request_reason', $award_request_reason);
 		$templater->register('formtitle', $formtitle);
 	$formsend = $templater->render();
+
+	//relative urls are converted to absolute so that the [img] bbcode works
+	$formsend = preg_replace("#(\[img\])(?=(?!http)(?!https))([^\s]+)(\[/img\])#", '$1' . $vbulletin->options['bburl'] . '/$2$3', $formsend);
 
 	$posttitle = construct_phrase($vbphrase['award_recommend_post_title'], "$award_request_recipient_name", $award['award_name']);
 	$award_send = 0;

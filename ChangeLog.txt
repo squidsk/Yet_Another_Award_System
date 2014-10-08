@@ -1,3 +1,12 @@
+4.0.4 RELEASE:
+    * Fixed - Award images with relative url not being dispalyed when an award is recommended/requested
+    * Fixed - Fixed customizations from additional.css template not displaying for various templates
+    * Fixed - Invalid xhtml in the awards_awardbit template (a <br> to a <br />)
+    * Fixed - The links in the description of the userid for pm/email setting point to non-existant phrases
+    * Fixed - Fixed an sql injection vector in request_award.php
+    * Updated - All templates to use the vb4 template format (i.e. {vb: . . . } format)
+    * Updated - Version in version phrase
+
 4.0.3 RELEASE:  (06/13/2012)
     * Fixed - Various install/uninstall code issues
     * Fixed - User profile tab graphical issues
@@ -18,7 +27,6 @@
     * Updated Version in version phrase
 
 4.0.2 RELEASE:  (04/10/2010 5:30AM CDT)
-
     * Fixed - Spacing on primary Awards Display page 
     * Fixed - Display Order in AdminCP Options not saving properly 
     * Fixed - "Awards" displaying on all profile tabs.

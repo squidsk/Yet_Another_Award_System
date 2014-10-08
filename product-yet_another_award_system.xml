@@ -3,7 +3,7 @@
 <product productid="yet_another_award_system" active="1">
 	<title>Yet Another Award System 4.0</title>
 	<description>Yet Another Awards System for vBulletin 4.0.x</description>
-	<version>4.0.3</version>
+	<version>4.0.4</version>
 	<url>http://www.vbulletin.org/forum/showthread.php?t=232684</url>
 	<versioncheckurl><![CDATA[http://www.vbulletin.org/forum/misc.php?do=checkversion&t=232684]]></versioncheckurl>
 	<dependencies>
@@ -176,6 +176,11 @@
 				$db->query_write("ALTER TABLE " . TABLE_PREFIX . "award DROP COLUMN award_allowrecommend");
 				echo "<font size=\"1\">Alter table - award</font><br />";
 				$db->reporterror = 1;
+
+				// Rebuild Bitfields
+				require_once(DIR . '/includes/class_bitfield_builder.php');
+				vB_Bitfield_Builder::save($db);
+				build_forum_permissions();  
 			]]></uninstallcode>
 		</code>
 		<code version="4.0.1.2">
@@ -222,7 +227,7 @@
 		</code>
 	</codes>
 	<templates>
-		<template name="AWARDS" templatetype="template" date="1124684206" username="Cypher" version=""><![CDATA[{vb:stylevar htmldoctype}
+		<template name="AWARDS" templatetype="template" date="1342645680" username="squid" version="4.0.3"><![CDATA[{vb:stylevar htmldoctype}
 <html xmlns="http://www.w3.org/1999/xhtml" dir="{vb:stylevar textdirection}" lang="{vb:stylevar languagecode}">
 <head>
 
@@ -232,7 +237,7 @@
 <script type="text/javascript" src="clientscript/vbulletin-editor.js?v={vb:raw vboptions.simpleversion}"></script>
 <link rel="stylesheet" type="text/css" href="{vb:var vbcsspath}editor.css" />
 <link rel="stylesheet" type="text/css" href="{vb:var vbcsspath}bbcode.css" />
-
+{vb:raw headinclude_bottom}
 </head>
 <body>
 
@@ -247,108 +252,106 @@
 
 </body>
 </html>]]></template>
-		<template name="awards_awardbit" templatetype="template" date="1340120669" username="squid" version="4.0.3"><![CDATA[<tr>
-<if condition="$vboptions[aw_showicon]">
+		<template name="awards_awardbit" templatetype="template" date="1345760393" username="squid" version="4.0.4"><![CDATA[<tr>
+<vb:if condition="$vboptions[aw_showicon]">
 	<td valign="middle" align="center" class="blockrow">
-		<img src="$award[award_icon_url]" alt="$award[award_name]" border="0" />
+		<img src="{vb:raw award.award_icon_url}" alt="{vb:raw award.award_name}" border="0" />
 	</td>
-</if>
+</vb:if>
 
-<if condition="$vboptions[aw_showimage]">
+<vb:if condition="$vboptions[aw_showimage]">
 	<td valign="middle" align="center" class="blockrow">
-		<a name="award$award[award_id]"></a>
-		<img src="$award[award_img_url]" alt="$award[award_name]" border="0" />
+		<a name="award{vb:raw award.award_id}"></a>
+		<img src="{vb:raw award.award_img_url}" alt="{vb:raw award.award_name}" border="0" />
 	</td>
-</if>
+</vb:if>
 
-<if condition="$vboptions[aw_showdesc]">
-	<td class="blockrow" valign="top"><b><a href="awards.php?do=viewaward&amp;award_id=$award[award_id]">$award[award_name]</a></b>
-		<div class="smallfont">$award[award_desc]</div>
-<if condition="$vboptions[aw_showmembers]">
+<vb:if condition="$vboptions[aw_showdesc]">
+	<td class="blockrow" valign="top"><b><a href="awards.php?do=viewaward&amp;award_id={vb:raw award.award_id}">{vb:raw award.award_name}</a></b>
+		<div class="smallfont">{vb:raw award.award_desc}</div>
+<vb:if condition="$vboptions[aw_showmembers]">
 <hr style="border: 1px solid;" align="left" />
 <div style="font-size:11px">
-<if condition="$awarduserslist">
-$vbphrase[users_with_thisaward]: $aw_ui<br>
-			$awarduserslist
-		<else />
-			$vbphrase[no_award_users]
-		</if>
+<vb:if condition="$awarduserslist">
+{vb:rawphrase users_with_thisaward}: {vb:raw aw_ui}<br />
+			{vb:raw awarduserslist}
+		<vb:else />
+			{vb:rawphrase no_award_users}
+		</vb:if>
 	</div>
-</if>
+</vb:if>
 </td>
-</if>
-<if condition="$vboptions[aw_actioncolumn]">
+</vb:if>
+<vb:if condition="$vboptions[aw_actioncolumn]">
 	<td align="center" nowrap="nowrap" class="blockrow">
-<if condition="$vboptions[aw_requestaward]">
-<if condition="$award[award_allowrequest]">
-		<a href="request_award.php?$session[sessionurl]award_id=$award[award_id]">$vbphrase[request_award]</a>
-</if>
-</if>
-<if condition="$vboptions[aw_recommendaward]">
-<if condition="$award[award_allowrecommend]">
-		<br /><a href="recommend_award.php?$session[sessionurl]award_id=$award[award_id]">$vbphrase[award_recommend_award]</a>
-</if>
-</if>
+<vb:if condition="$vboptions[aw_requestaward]">
+<vb:if condition="$award[award_allowrequest]">
+		<a href="request_award.php?{vb:raw session.sessionurl}award_id={vb:raw award.award_id}">{vb:rawphrase request_award}</a>
+</vb:if>
+</vb:if>
+<vb:if condition="$vboptions[aw_recommendaward]">
+<vb:if condition="$award[award_allowrecommend]">
+		<br /><a href="recommend_award.php?{vb:raw session.sessionurl}award_id={vb:raw award.award_id}">{vb:rawphrase award_recommend_award}</a>
+</vb:if>
+</vb:if>
 
 	</td>
-</if>
+</vb:if>
 
 </tr>]]></template>
-		<template name="awards_awardusers_bit" templatetype="template" date="1340118998" username="squid" version="4.0.3"><![CDATA[, <a href="member.php?$session[sessionurl]u=$awardusers[userid]&amp;tab=myawards#award">$awardusers[username]</a>]]></template>
-		<template name="awards_bit" templatetype="template" date="1340119078" username="squid" version="4.0.3"><![CDATA[<a href="member.php?$session[sessionurl]u=$award[userid]&amp;tab=myawards#aw_issue$award[issue_id]">
+		<template name="awards_awardusers_bit" templatetype="template" date="1346357044" username="squid" version="4.0.4"><![CDATA[, <a href="member.php?{vb:raw session.sessionurl}u={vb:raw awardusers.userid}&amp;tab=myawards#award">{vb:raw awardusers.username}</a>]]></template>
+		<template name="awards_bit" templatetype="template" date="1346358072" username="squid" version="4.0.4"><![CDATA[<a href="member.php?{vb:raw session.sessionurl}u={vb:raw award.userid}&amp;tab=myawards#aw_issue{vb:raw award.issue_id}">
 
-<img border="0" src="$award[award_icon_url]" alt="$award[award_name]  
+<img border="0" src="{vb:raw award.award_icon_url}" alt="{vb:raw award.award_name}<vb:if condition="$vboptions[aw_points]">
+ / {vb:rawphrase award_point_value}: {vb:raw award.award_pointvalue}
 
-<if condition="$vboptions[aw_points]">
-/ $vbphrase[award_point_value]: $award[award_pointvalue]
-
-</if>" />
+</vb:if>" title="{vb:raw award.award_name}"/>
 
 </a>]]></template>
-		<template name="awards_category" templatetype="template" date="1133204684" username="Cypher" version=""><![CDATA[<div class="blockhead">
-		$award_categotybit
-		<if condition="$award_cat[award_cat_desc]"><div class="smallfont">$award_cat[award_cat_desc]</div></if>
+		<template name="awards_category" templatetype="template" date="1346432178" username="squid" version="4.0.4"><![CDATA[<div class="blockhead">
+		{vb:raw award_categotybit}
+		<vb:if condition="$award_cat[award_cat_desc]"><div class="smallfont">{vb:raw award_cat.award_cat_desc}</div></vb:if>
 </div>
 <div class="blockbody">
 <table width="100%" cellpadding="5">
 <tr>
 
-<if condition="$vboptions[aw_showicon]">
-	<th class="blocksubhead" width="3%" style="text-align: center">$vbphrase[award_icon]</th>
-</if>
+<vb:if condition="$vboptions[aw_showicon]">
+	<th class="blocksubhead" width="3%" style="text-align: center">{vb:rawphrase award_icon}</th>
+</vb:if>
 
-<if condition="$vboptions[aw_showimage]">
-	<th class="blocksubhead" align="right" width="3%" style="text-align: center">$vbphrase[award_image]</th>
-</if>
+<vb:if condition="$vboptions[aw_showimage]">
+	<th class="blocksubhead" align="right" width="3%" style="text-align: center">{vb:rawphrase award_image}</th>
+</vb:if>
 
-<if condition="$vboptions[aw_showdesc]">
-	<th class="blocksubhead" width="80%" nowrap="nowrap">$vbphrase[award_name] / $vbphrase[award_description]</th>
-</if>
+<vb:if condition="$vboptions[aw_showdesc]">
+	<th class="blocksubhead" width="80%" nowrap="nowrap">{vb:rawphrase award_name} / {vb:rawphrase award_description}</th>
+</vb:if>
 
-<if condition="$vboptions[aw_actioncolumn]">
+<vb:if condition="$vboptions[aw_actioncolumn]">
 	<th class="blocksubhead" width="15%" nowrap="nowrap"></th>
-</if>
+</vb:if>
 </tr>
 
-<if condition="$award[award_id]">
-$awardsbits
-<else />
+<vb:if condition="$award[award_id]">
+{vb:raw awardsbits}
+<vb:else />
 	<!-- show no awards message -->
 	<tr>
 		<td class="alt1" colspan="3" align="center">
 			<div style="padding: 16px">
-				<strong>$vbphrase[no_awards_in_this_category]</strong>
+				<strong>{vb:rawphrase no_awards_in_this_category}</strong>
 			</div>
 		</td>
 	</tr>
 	<!-- end show no awards message -->
-</if>
+</vb:if>
 </table>
 <br />
 </div>
 
 <br />]]></template>
-		<template name="awards_categorybit" templatetype="template" date="1124684291" username="Cypher" version=""><![CDATA[<a href="awards.php?$session[sessionurl]award_cat_id=$award_cat[award_cat_id]" name="award_cat$award_cat[award_cat_id]">$award_cat[award_cat_title]</a>]]></template>
+		<template name="awards_categorybit" templatetype="template" date="1346432283" username="squid" version="4.0.4"><![CDATA[<a href="awards.php?{vb:raw session.sessionurl}award_cat_id={vb:raw award_cat.award_cat_id}" name="award_cat{vb:raw award_cat.award_cat_id}">{vb:raw award_cat.award_cat_title}</a>]]></template>
 		<template name="awards_css.css" templatetype="template" date="1202279745" username="Cypher" version="4.0.0"><![CDATA[
 /* Begin Style 1 Fieldset Formatting*/
 
@@ -403,271 +406,276 @@ DIV.awards_showcase_infodisplay {
 	<li><a class="navtab" href="awards.php{vb:raw session.sessionurl_q}">{vb:rawphrase awards}</a></li>
 </vb:if>
 ]]></template>
-		<template name="awards_postbit_display" templatetype="template" date="1340124474" username="squid" version="4.0.3"><![CDATA[<!-- show awards -->
-<if condition="$post[showuserawards]">
+		<template name="awards_postbit_display" templatetype="template" date="1346433176" username="squid" version="4.0.4"><![CDATA[<!-- show awards -->
+<vb:if condition="$post[showuserawards]">
 <br />
-<fieldset><legend><a href="member.php?u=$post[userid]&amp;tab=myawards" title="$vbphrase[more_awards]">$vbphrase[award_showcase]</a></legend>
-	<div class="awards_showcase_awarddisplay">$post[userawards]</div>
+<fieldset><legend><a href="member.php?u={vb:raw post.userid}&amp;tab=myawards" title="{vb:rawphrase more_awards}">{vb:rawphrase award_showcase}</a></legend>
+	<div class="awards_showcase_awarddisplay">{vb:raw post.userawards}</div>
 	<div class="awards_showcase_infodisplay">
-		<a href="member.php?u=$post[userid]&amp;tab=myawards" title="$vbphrase[more_awards]">$vbphrase[total_awards]</a>: $post[num_awards]
-		<if condition="$vboptions[aw_points]"><br />
-			<a href="member.php?u=$post[userid]&amp;tab=myawards" title="$vbphrase[more_awards]">$vbphrase[total_points]</a>: $post[total_points]
-		</if>
+		<a href="member.php?u={vb:raw post.userid}&amp;tab=myawards" title="{vb:rawphrase more_awards}">{vb:rawphrase total_awards}</a>: {vb:raw post.num_awards}
+		<vb:if condition="$vboptions[aw_points]"><br />
+			<a href="member.php?u={vb:raw post.userid}&amp;tab=myawards" title="{vb:rawphrase more_awards}">{vb:rawphrase total_points}</a>: {vb:raw post.total_points}
+		</vb:if>
 	</div>
 </fieldset>
 <br />
-</if>
+</vb:if>
 <!-- /show awards -->
 ]]></template>
-		<template name="awards_postbit_display_customcss" templatetype="template" date="1340124779" username="squid" version="4.0.3"><![CDATA[<!-- show awards -->
-<if condition="$post[showuserawards]">
+		<template name="awards_postbit_display_customcss" templatetype="template" date="1346434274" username="squid" version="4.0.4"><![CDATA[<!-- show awards -->
+<vb:if condition="$post[showuserawards]">
 <br />
 <div class="awards_postbit_customcss">
-	<div class="awards_showcase_headtext"><a href="member.php?u=$post[userid]&amp;tab=myawards" title="$vbphrase[more_awards]">$vbphrase[award_showcase]</a></div>
-	<div class="awards_showcase_awarddisplay">$post[userawards]</div>
+	<div class="awards_showcase_headtext"><a href="member.php?u={vb:raw post.userid}&amp;tab=myawards" title="{vb:rawphrase more_awards}">{vb:rawphrase award_showcase}</a></div>
+	<div class="awards_showcase_awarddisplay">{vb:raw post.userawards}</div>
 	<div class="awards_showcase_infodisplay">
-		<a href="member.php?u=$post[userid]&amp;tab=myawards" title="$vbphrase[more_awards]">$vbphrase[total_awards]</a>: $post[num_awards]
-		<if condition="$vboptions[aw_points]"><br />
-			<a href="member.php?u=$post[userid]&amp;tab=myawards" title="$vbphrase[more_awards]">$vbphrase[total_points]</a>: $post[total_points]
-		</if>
+		<a href="member.php?u={vb:raw post.userid}&amp;tab=myawards" title="{vb:rawphrase more_awards}">{vb:rawphrase total_awards}</a>: {vb:raw post.num_awards}
+		<vb:if condition="$vboptions[aw_points]"><br />
+			<a href="member.php?u={vb:raw post.userid}&amp;tab=myawards" title="{vb:rawphrase more_awards}">{vb:rawphrase total_points}</a>: {vb:raw post.total_points}
+		</vb:if>
 	</div>
 </div>
 <br />
-</if>
+</vb:if>
 <!-- /show awards -->
 ]]></template>
-		<template name="awards_postbit_display_style2" templatetype="template" date="1340124814" username="squid" version="4.0.3"><![CDATA[<!-- show awards -->
-<if condition="$post[showuserawards]">
+		<template name="awards_postbit_display_style2" templatetype="template" date="1346773109" username="squid" version="4.0.4"><![CDATA[<!-- show awards -->
+<vb:if condition="$post[showuserawards]">
 <div class="awards_postbit_style2">
-	<div class="awards_showcase_awarddisplay">$post[userawards]</div>
+	<div class="awards_showcase_awarddisplay">{vb:raw post.userawards}</div>
 	<div class="awards_showcase_infodisplay">
-		<a href="member.php?u=$post[userid]&amp;tab=myawards" title="$vbphrase[more_awards]">$vbphrase[total_awards]</a>: $post[num_awards]
-		<if condition="$vboptions[aw_points]"><br />
-			<a href="member.php?u=$post[userid]&amp;tab=myawards" title="$vbphrase[more_awards]">$vbphrase[total_points]</a>: $post[total_points]
-		</if>
+		<a href="member.php?u={vb:raw post.userid}&amp;tab=myawards" title="{vb:rawphrase more_awards}">{vb:rawphrase total_awards}</a>: {vb:raw post.num_awards}
+		<vb:if condition="$vboptions[aw_points]"><br />
+			<a href="member.php?u={vb:raw post.userid}&amp;tab=myawards" title="{vb:rawphrase more_awards}">{vb:rawphrase total_points}</a>: {vb:raw post.total_points}
+		</vb:if>
 	</div>
 </div>
-</if>
+</vb:if>
 <!-- /show awards -->
 ]]></template>
-		<template name="awards_postbit_display_style3" templatetype="template" date="1133134090" username="Cypher" version=""><![CDATA[
-<!-- show awards -->
-<if condition="$post[showuserawards]">
+		<template name="awards_postbit_display_style3" templatetype="template" date="1346773257" username="squid" version="4.0.4"><![CDATA[<!-- show awards -->
+<vb:if condition="$post[showuserawards]">
 <div class="awards_postbit_style3">
-	<div class="awards_showcase_awarddisplay">$post[userawards]</div>
+	<div class="awards_showcase_awarddisplay">{vb:raw post.userawards}</div>
 </div>
-</if>
+</vb:if>
 
 <!-- /show awards -->
 ]]></template>
-		<template name="awards_recommend_form" templatetype="template" date="1202279745" username="Cypher" version="3.8.3"><![CDATA[
-$stylevar[htmldoctype]
-<html id="form" dir="$stylevar[textdirection]" lang="$stylevar[languagecode]">
+		<template name="awards_recommend_form" templatetype="template" date="1343840282" username="squid" version="4.0.4"><![CDATA[{vb:stylevar htmldoctype}
+<html xmlns="http://www.w3.org/1999/xhtml" dir="{vb:stylevar textdirection}" lang="{vb:stylevar languagecode}">
 <head>
-<title>$vboptions[bbtitle] - $vbphrase[award_recommendformtitle]</title>
-$headinclude
+
+<title>{vb:raw vboptions.bbtitle} - {vb:rawphrase awards}</title>
+{vb:raw headinclude}
+
+{vb:raw headinclude_bottom}
 </head>
 <body>
-$header
-$navbar
+
+{vb:raw header}
+{vb:raw navbar}
 
 <form enctype="multipart/form-data" method="post" action="recommend_award.php">
 <input type="hidden" value="submit" name="do">
-<input type="hidden" value="$award[award_id]" name="award_id">
+<input type="hidden" value="{vb:raw award.award_id}" name="award_id">
 
-<div class="blockhead">$vbphrase[award]: $award[award_name] (id: $award[award_id])</div>
+<div class="blockhead">{vb:rawphrase award}: {vb:raw award.award_name} (id: {vb:raw award.award_id})</div>
 
-<div align="center"><br /><img src="$award[award_img_url]"><br /><strong> $award[award_name]</strong></div>
+<div align="center"><br /><img src="{vb:raw award.award_img_url}"><br /><strong> {vb:raw award.award_name}</strong></div>
 
-			<if condition="$award[award_desc]">
+			<vb:if condition="$award[award_desc]">
 <br />
-<div class="blockhead">$vbphrase[award_description]</div>
-<div class="blocksubhead">$award[award_desc]</div>
-</if>
+<div class="blockhead">{vb:rawphrase award_description}</div>
+<div class="blocksubhead">{vb:raw award.award_desc}</div>
+</vb:if>
 
 <br />
 
 <div class="blockhead">
-$vbphrase[award_recommendformtitle]
+{vb:rawphrase award_recommendformtitle}
 </div>
 <div class="blocksubhead">
-$vbphrase[award_recommendformpurpose]
+{vb:rawphrase award_recommendformpurpose}
 <br /><br />
 
 
-$vbphrase[username]
-				<table cellpadding="0" cellspacing="$stylevar[formspacer]" border="0" width="100%">
+{vb:rawphrase username}
+				<table cellpadding="0" cellspacing="{vb:stylevar formspacer}" border="0" width="100%">
 				<tr>
-					<td><b>$bbuserinfo[username]</b> (User ID: $bbuserinfo[userid])</td>
+					<td><b>{vb:raw bbuserinfo.username}</b> (User ID: {vb:raw bbuserinfo.userid})</td>
 				</tr>
 				</table>
 <br />
 
-$vbphrase[award_request_recipient_name]
-				<table cellpadding="0" cellspacing="$stylevar[formspacer]" border="0" width="100%">
+{vb:rawphrase award_request_recipient_name}
+				<table cellpadding="0" cellspacing="{vb:stylevar formspacer}" border="0" width="100%">
 				<tr>
 					<td><input type="text" class="bginput" size="30" name="award_request_recipient_name"></td>
 				</tr>
 				<tr>
-					<td>$vbphrase[award_request_recipient_name_detail]</td>
+					<td>{vb:rawphrase award_request_recipient_name_detail}</td>
 				</tr>
 				</table>
 <br />
-$vbphrase[award_request_reason]
-				<table cellpadding="0" cellspacing="$stylevar[formspacer]" border="0" width="100%">
+{vb:rawphrase award_request_reason}
+				<table cellpadding="0" cellspacing="{vb:stylevar formspacer}" border="0" width="100%">
 				<tr>
 					<td><textarea rows="5" cols="50" name="award_request_reason"></textarea></td>
 				</tr>
 				</table>
 <br />
-<input type="hidden" name="award_request_uid" value="$bbuserinfo[userid]">
-<input type="submit" name="submit" class="button" value="$vbphrase[submit]" accesskey="s" />
-		<input type="reset" name="reset" class="button" value="$vbphrase[reset_fields]" accesskey="r" />
+<input type="hidden" name="award_request_uid" value="{vb:raw bbuserinfo.userid}">
+<input type="submit" name="submit" class="button" value="{vb:rawphrase submit}" accesskey="s" />
+		<input type="reset" name="reset" class="button" value="{vb:rawphrase reset_fields}" accesskey="r" />
 
 		
 </div>
 
 </form>
 
-$footer
+{vb:raw footer}
 </body>
 </html>
 
 
 ]]></template>
-		<template name="awards_request_form" templatetype="template" date="1133280265" username="Cypher" version=""><![CDATA[$stylevar[htmldoctype]
-<html id="form" dir="$stylevar[textdirection]" lang="$stylevar[languagecode]">
+		<template name="awards_request_form" templatetype="template" date="1343840183" username="squid" version="4.0.4"><![CDATA[{vb:stylevar htmldoctype}
+<html xmlns="http://www.w3.org/1999/xhtml" dir="{vb:stylevar textdirection}" lang="{vb:stylevar languagecode}">
 <head>
-<title>$vboptions[bbtitle] - $vbphrase[award_formtitle]</title>
-$headinclude
+
+<title>{vb:raw vboptions.bbtitle} - {vb:rawphrase awards}</title>
+{vb:raw headinclude}
+
+{vb:raw headinclude_bottom}
 </head>
 <body>
-$header
-$navbar
+
+{vb:raw header}
+{vb:raw navbar}
 
 <form enctype="multipart/form-data" method="post" action="request_award.php">
-<input type="hidden" value="submit" name="do">
-<input type="hidden" value="$award[award_id]" name="award_id">
+<input type="hidden" value="submit" name="do" />
+<input type="hidden" value="{vb:raw award.award_id}" name="award_id" />
 
-<div class="blockhead">$vbphrase[award]: $award[award_name] (id: $award[award_id])</div>
+<div class="blockhead">{vb:rawphrase award}: {vb:raw award.award_name} (id: {vb:raw award.award_id})</div>
 
-<div align="center"><br /><img src="$award[award_img_url]"><br /><strong> $award[award_name]</strong></div>
+<div align="center"><br /><img src="{vb:raw award.award_img_url}" alt="{vb:raw award.award_name}" /><br /><strong> {vb:raw award.award_name}</strong></div>
 
-			<if condition="$award[award_desc]">
+			<vb:if condition="$award[award_desc]">
 <br />
-<div class="blockhead">$vbphrase[award_description]</div>
-<div class="blocksubhead">$award[award_desc]</div>						
-</if>
+<div class="blockhead">{vb:rawphrase award_description}</div>
+<div class="blocksubhead">{vb:raw award.award_desc}</div>						
+</vb:if>
 	
 <br />
 
 <div class="blockhead">
-$vbphrase[award_formtitle]
+{vb:rawphrase award_formtitle}
 </div>
 <div class="blocksubhead">
-$vbphrase[award_formpurpose]
+{vb:rawphrase award_formpurpose}
 <br /><br />
 
-$vbphrase[username]
-				<table cellpadding="0" cellspacing="$stylevar[formspacer]" border="0" width="100%">
+{vb:rawphrase username}
+				<table cellpadding="0" cellspacing="{vb:stylevar formspacer}" border="0" width="100%">
 				<tr>
-					<td><b>$bbuserinfo[username]</b> (User ID: $bbuserinfo[userid])</td>
+					<td><b>{vb:raw bbuserinfo.username}</b> (User ID: {vb:raw bbuserinfo.userid})</td>
 				</tr>
 				</table>
 <br />
 		
 		
-$vbphrase[award_request_reason]
-				<table cellpadding="0" cellspacing="$stylevar[formspacer]" border="0" width="100%">
+{vb:rawphrase award_request_reason}
+				<table cellpadding="0" cellspacing="{vb:stylevar formspacer}" border="0" width="100%">
 				<tr>
 					<td><textarea rows="5" cols="50" name="award_request_reason"></textarea></td>
 				</tr>
 				</table>
 <br />
-<input type="hidden" name="award_request_uid" value="$bbuserinfo[userid]">
-<input type="submit" name="submit" class="button" value="$vbphrase[submit]" accesskey="s" />
-		<input type="reset" name="reset" class="button" value="$vbphrase[reset_fields]" accesskey="r" />
+<input type="hidden" name="award_request_uid" value="{vb:raw bbuserinfo.userid}" />
+<input type="submit" name="submit" class="button" value="{vb:rawphrase submit}" accesskey="s" />
+		<input type="reset" name="reset" class="button" value="{vb:rawphrase reset_fields}" accesskey="r" />
 
 		
 </div>
 
 </form>
 
-$footer
+{vb:raw footer}
 </body>
 </html>]]></template>
-		<template name="awards_request_formanswers" templatetype="template" date="1133134090" username="Cypher" version=""><![CDATA[
-		[color=blue][b]Sender Information[/b][/color]
+		<template name="awards_request_formanswers" templatetype="template" date="1344011118" username="squid" version="4.0.4"><![CDATA[		[color="blue"][b]Sender Information[/b][/color]
 
-$vbphrase[userid]: [url=$vboptions[bburl]/member.php?u=$bbuserinfo[userid]]$bbuserinfo[userid][/url]
-$vbphrase[username]: $bbuserinfo[username]
+{vb:rawphrase userid}: [url={vb:raw vboptions.bburl}/member.php?u={vb:raw bbuserinfo.userid}]{vb:raw bbuserinfo.userid}[/url]
+{vb:rawphrase username}: {vb:raw bbuserinfo.username}
 
 -----------------------------
-[color=red][b]Request Information:[/b][/color]
-Award ID: [b][url=$vboptions[bburl]/awards.php#award$award[award_id]]$award[award_id][/url][/b]
-$vbphrase[award_name]: [b]$award[award_name][/b]
-$vbphrase[award_description]: [b]$award[award_desc][/b]
-[url=$vboptions[bburl]/awards.php#award$award[award_id]][img]$award[award_img_url][/img][/url]
+[color="red"][b]Request Information:[/b][/color]
+Award ID: [b][url={vb:raw vboptions.bburl}/awards.php#award{vb:raw award.award_id}]{vb:raw award.award_id}[/url][/b]
+{vb:rawphrase award_name}: [b]{vb:raw award.award_name}[/b]
+{vb:rawphrase award_description}: [b]{vb:raw award.award_desc}[/b]
+[url={vb:raw vboptions.bburl}/awards.php#award{vb:raw award.award_id}][img]{vb:raw award.award_img_url}[/img][/url]
 
-$vbphrase[award_request_recipient_name] : [b][url=$vboptions[bburl]/member.php?username=$award_request_recipient_name] $award_request_recipient_name [/url] [/b]
+{vb:rawphrase award_request_recipient_name} : [b][url={vb:raw vboptions.bburl}/member.php?username={vb:raw award_request_recipient_name}]{vb:raw award_request_recipient_name}[/url][/b]
 
 -----------------------------------------------------
-$vbphrase[award_request_reason]
+{vb:rawphrase award_request_reason}
 
 
-$award_request_reason
+{vb:raw award_request_reason}
 -----------------------------------------------------
 ]]></template>
-		<template name="awards_showcase" templatetype="template" date="1133206835" username="Cypher" version=""><![CDATA[<!-- [START HACK='Yet Another Awards System hack' AUTHOR='HacNho'] -->
-<if condition="$show['userawards']">
+		<template name="awards_showcase" templatetype="template" date="1346785158" username="squid" version="4.0.4"><![CDATA[<!-- [START HACK='Yet Another Awards System hack' AUTHOR='HacNho'] -->
+<vb:if condition="$show['userawards']">
 <a name="award"></a>
-<br>
-<table class="tborder" cellpadding="$stylevar[cellpadding]" cellspacing="$stylevar[cellspacing]" border="0" width="100%" align="center">
+<br />
+<table class="tborder" cellpadding="{vb:stylevar cellpadding}" cellspacing="{vb:stylevar cellspacing}" border="0" width="100%" align="center">
 	<tr>
 		<td class="tcat" colspan="3" align="center">
-			<a style="float:$stylevar[right]" href="#top" onclick="return toggle_collapse('award_showcase')"><img id="collapseimg_award_showcase" src="$stylevar[imgdir_button]/collapse_tcat{$collapseimg_award_showcase}.gif" alt="" border="0" /></a>
-			$vbphrase[award_showcase] ($total_awards $vbphrase[awards])
+			<a style="float:{vb:stylevar right}" href="#top" onclick="return toggle_collapse('award_showcase')"><img id="collapseimg_award_showcase" src="{vb:stylevar imgdir_button}/collapse_tcat{{vb:raw collapseimg_award_showcase}}.gif" alt="" border="0" /></a>
+			{vb:rawphrase award_showcase} ({vb:raw total_awards} {vb:rawphrase awards})
 		</td>
 	</tr>
-<tbody id="collapseobj_award_showcase" style="{$collapseobj_award_showcase}">
+<tbody id="collapseobj_award_showcase" style="{{vb:raw collapseobj_award_showcase}}">
 	<tr>
-		<if condition="$vboptions[aw_showicon]">
-				<td class="thead" nowrap>$vbphrase[award_icon]</td>
-		</if>
-		<if condition="$vboptions[aw_showimage]">
-				<td class="thead" nowrap>$vbphrase[award_image]</td>
-		</if>
-		<td class="thead" width="100%">$vbphrase[award_description]</td>
+		<vb:if condition="$vboptions[aw_showicon]">
+				<td class="thead" nowrap>{vb:rawphrase award_icon}</td>
+		</vb:if>
+		<vb:if condition="$vboptions[aw_showimage]">
+				<td class="thead" nowrap>{vb:rawphrase award_image}</td>
+		</vb:if>
+		<td class="thead" width="100%">{vb:rawphrase award_description}</td>
 	</tr>
-	$userawardslistbits
+	{vb:raw userawardslistbits}
 </tbody>
 </table>
-</if>
+</vb:if>
 <!-- [END HACK='Yet Another Awards System hack' AUTHOR='HacNho'] -->]]></template>
-		<template name="awards_userawards_bit" templatetype="template" date="1340121517" username="squid" version="4.0.3"><![CDATA[<tr>
-	<if condition="$vboptions[aw_showicon]">
-		<td class="$bgclass" valign="middle" align="center">
-			<img src="$award[award_icon_url]" border="0" alt="$award[award_name]" />
+		<template name="awards_userawards_bit" templatetype="template" date="1346797436" username="squid" version="4.0.4"><![CDATA[<tr>
+	<vb:if condition="$vboptions[aw_showicon]">
+		<td class="{vb:raw bgclass}" valign="middle" align="center">
+			<img src="{vb:raw award.award_icon_url}" border="0" alt="{vb:raw award.award_name}" />
 		</td>
-	</if>
-	<if condition="$vboptions[aw_showimage]">
-		<td class="$bgclass" valign="middle" align="center">
-			<a href="awards.php?$session[sessionurl]#award$award[award_id]">
-			<img src="$award[award_img_url]" border="0" alt="$award[award_name]" /></a>
+	</vb:if>
+	<vb:if condition="$vboptions[aw_showimage]">
+		<td class="{vb:raw bgclass}" valign="middle" align="center">
+			<a href="awards.php?{vb:raw session.sessionurl}#award{vb:raw award.award_id}">
+			<img src="{vb:raw award.award_img_url}" border="0" alt="{vb:raw award.award_name}" /></a>
 		</td>
-	</if>
+	</vb:if>
 	
-	<td class="$bgclass" valign="top">
-		<a name="aw_issue$award[issue_id]"></a>
-		$vbphrase[award_name]: <b>$award[award_name]</b><br />
-		$award[award_desc]
+	<td class="{vb:raw bgclass}" valign="top">
+		<a name="aw_issue{vb:raw award.issue_id}"></a>
+		{vb:rawphrase award_name}: <b>{vb:raw award.award_name}</b><br />
+		{vb:raw award.award_desc}
 <div style="font-size:11px">
 		<fieldset class="fieldset">
-			<table cellpadding="0" cellspacing="$stylevar[formspacer]" border="0">
+			<table cellpadding="0" cellspacing="{vb:stylevar formspacer}" border="0">
 			<tr>
 				<td>
-					<i>$vbphrase[award_time]: $award_issue_date $award_issue_time</i><br />
-					<i>$vbphrase[award_reason]: $award[issue_reason]</i>
+					<i>{vb:rawphrase award_time}: {vb:raw award_issue_date} {vb:raw award_issue_time}</i><br />
+					<i>{vb:rawphrase award_reason}: {vb:raw award.issue_reason}</i>
 				</td>
 			</tr>
 			</table>
@@ -676,47 +684,51 @@ $award_request_reason
 
 	</td>
 </tr>]]></template>
-		<template name="awards_viewaward" templatetype="template" date="1133204968" username="Cypher" version=""><![CDATA[$stylevar[htmldoctype]
-<html id="form" dir="$stylevar[textdirection]" lang="$stylevar[languagecode]">
+		<template name="awards_viewaward" templatetype="template" date="1343840263" username="squid" version="4.0.4"><![CDATA[{vb:stylevar htmldoctype}
+<html xmlns="http://www.w3.org/1999/xhtml" dir="{vb:stylevar textdirection}" lang="{vb:stylevar languagecode}">
 <head>
-<title>$vboptions[bbtitle] - $formtitle</title>
-$headinclude
+
+<title>{vb:raw vboptions.bbtitle} - {vb:rawphrase awards}</title>
+{vb:raw headinclude}
+
+{vb:raw headinclude_bottom}
 </head>
 <body>
-$header
-$navbar
+
+{vb:raw header}
+{vb:raw navbar}
 
 <div class="blockhead">
-$vbphrase[award]: $award[award_name]
+{vb:rawphrase award}: {vb:raw award.award_name}
 </div>
 <br />
-<div align="center"><img src="$award[award_img_url]"><br />
-<strong>$award[award_name]</strong>
+<div align="center"><img src="{vb:raw award.award_img_url}"><br />
+<strong>{vb:raw award.award_name}</strong>
 </div>
 
-<if condition="$award[award_desc]">
+<vb:if condition="$award[award_desc]">
 <br />
-<div class="blockhead">$vbphrase[award_description]</div>
-<div class="blocksubhead">$award[award_desc]</div>
-</if>
+<div class="blockhead">{vb:rawphrase award_description}</div>
+<div class="blocksubhead">{vb:raw award.award_desc}</div>
+</vb:if>
 	
 <br />
 
-<div class="blockhead">$vbphrase[users_with_thisaward]:  $aw_ui</div>
+<div class="blockhead">{vb:rawphrase users_with_thisaward}:  {vb:raw aw_ui}</div>
 	
 <div class="blocksubhead">
 
-<if condition="$awarduserslist">
-<b>$awarduserslist</b>
-<else />
-$vbphrase[no_award_users]
-</if>
+<vb:if condition="$awarduserslist">
+<b>{vb:raw awarduserslist}</b>
+<vb:else />
+{vb:rawphrase no_award_users}
+</vb:if>
 
 </div>
 
-<div align="center">&laquo; <a href="awards.php">$vbphrase[show_all_awards]</a> &raquo;</div>
+<div align="center">&laquo; <a href="awards.php">{vb:rawphrase show_all_awards}</a> &raquo;</div>
 	
-$footer
+{vb:raw footer}
 </body>
 </html>]]></template>
 		<template name="memberinfo_block_myawards" templatetype="template" date="1340122294" username="squid" version="4.0.3"><![CDATA[<div id="view-myawards" <vb:if condition="$selected_tab == 'myawards'"> class="selected_view_section"<vb:else />class="view_section"</vb:if>>
@@ -744,6 +756,20 @@ $footer
 	<stylevars>
 	</stylevars>
 	<plugins>
+		<plugin active="1" executionorder="5">
+			<title>YAAS in Member Profile - Cache Templates</title>
+			<hookname>cache_templates</hookname>
+			<phpcode><![CDATA[
+if(THIS_SCRIPT=='member')
+{
+$cache = array_merge($cache, array(
+'memberinfo_block_myawards',
+'awards_userawards_bit'
+));
+}
+
+]]></phpcode>
+		</plugin>
 		<plugin active="1" executionorder="5">
 			<title>CSS - Cache Template</title>
 			<hookname>cache_templates</hookname>
@@ -777,20 +803,6 @@ $cache = array_merge($cache, array(
 'awards_userawards_bit'
 ));
 }
-]]></phpcode>
-		</plugin>
-		<plugin active="1" executionorder="5">
-			<title>YAAS in Member Profile - Cache Templates</title>
-			<hookname>cache_templates</hookname>
-			<phpcode><![CDATA[
-if(THIS_SCRIPT=='member')
-{
-$cache = array_merge($cache, array(
-'memberinfo_block_myawards',
-'awards_userawards_bit'
-));
-}
-
 ]]></phpcode>
 		</plugin>
 		<plugin active="1" executionorder="5">
@@ -1232,7 +1244,7 @@ The {$vbulletin->options['bbtitle']} staff]]></phrase>
 			<phrase name="user_awards" date="0" username="" version=""><![CDATA[User Awards ]]></phrase>
 			<phrase name="users_with_awards" date="0" username="" version=""><![CDATA[Users Who Have Already Recieved Awards]]></phrase>
 			<phrase name="users_with_thisaward" date="0" username="" version=""><![CDATA[Members who received this award]]></phrase>
-			<phrase name="yaas_version" date="1338313529" username="squid" version="4.0.3"><![CDATA[<center><a href='http://www.vbulletin.org/forum/showthread.php?t=232684'>Yet Another Awards System</a> v4.0.3</center>]]></phrase>
+			<phrase name="yaas_version" date="1343840058" username="squid" version="4.0.4"><![CDATA[<center><a href='http://www.vbulletin.org/forum/showthread.php?t=232684'>Yet Another Awards System</a> v4.0.4</center>]]></phrase>
 		</phrasetype>
 		<phrasetype name="vBulletin Settings" fieldname="vbsettings">
 			<phrase name="setting_aw_actioncolumn_desc" date="1174283089" username="Cypher" version="3.8.3"><![CDATA[Do you want to show the action coulumn in Awards list page]]></phrase>
@@ -1262,9 +1274,9 @@ The {$vbulletin->options['bbtitle']} staff]]></phrase>
 			<phrase name="setting_aw_showimage_title" date="1174282998" username="Cypher" version="2.1.2"><![CDATA[Awards List: Display Image]]></phrase>
 			<phrase name="setting_aw_showmembers_desc" date="1174283060" username="Cypher" version="2.1.2"><![CDATA[Do you want to show list of members who have received awards in Awards list page]]></phrase>
 			<phrase name="setting_aw_showmembers_title" date="1174283060" username="Cypher" version="2.1.2"><![CDATA[Awards List: Display Members Who Received Awards]]></phrase>
-			<phrase name="setting_award_pm_fromuserid_desc" date="1174286595" username="Cypher" version="2.1.2"><![CDATA[Enter the User ID of the User you would like to appear as sender of the Congratulation PM and/or Email.<br />
+			<phrase name="setting_award_pm_fromuserid_desc" date="1346356337" username="squid" version="4.0.4"><![CDATA[Enter the User ID of the User you would like to appear as sender of the Congratulation PM and/or Email.<br />
 Leave it "0" to use userid of the one who issue award<br />
-To edit the PM Content, click <a href="phrase.php?do=edit&amp;e[3000][award_pm]">here</a>, to edit the Subject click <a href="phrase.php?do=edit&amp;e[4000][award_pm]">here</a>.]]></phrase>
+To edit the PM Content, click <a href="phrase.php?do=edit&amp;e[emailbody][award_pm]">here</a>, to edit the Subject click <a href="phrase.php?do=edit&amp;e[emailsubject][award_pm]">here</a>.]]></phrase>
 			<phrase name="setting_award_pm_fromuserid_title" date="1174286595" username="Cypher" version="2.1.2"><![CDATA[Submission: From Userid for Congratulation PM and/or Email]]></phrase>
 			<phrase name="setting_award_request_formemailaddress_desc" date="0" username="" version=""><![CDATA[If you want to send award submissions as email, please enter email of the one who process requests.
 Leave it empty if you dont want to use this function.]]></phrase>

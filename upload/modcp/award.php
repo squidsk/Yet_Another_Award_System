@@ -1,13 +1,13 @@
 <?php
 /*======================================================================*\
 || #################################################################### ||
-|| # Yet Another Award System v4.0.3 © by HacNho                      # ||
+|| # Yet Another Award System v4.0.4 © by HacNho                      # ||
 || # Copyright (C) 2005-2007 by HacNho, All rights reserved.          # ||
 || # ---------------------------------------------------------------- # ||
-|| # For use with vBulletin Version 4.1.12                             # ||
+|| # For use with vBulletin Version 4.1.12                            # ||
 || # http://www.vbulletin.com | http://www.vbulletin.com/license.html # ||
 || # Discussion and support available at                              # ||
-|| # http://www.vbulletin.org/forum/showthread.php?t=94836            # ||
+|| # http://www.vbulletin.org/forum/showthread.php?t=232684           # ||
 || # ---------------------------------------------------------------- # ||
 || #################################################################### ||
 \*======================================================================*/
