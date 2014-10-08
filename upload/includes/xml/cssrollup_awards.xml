@@ -3,4 +3,7 @@
   <rollup name="main-rollup.css">
     <template>awards_css.css</template>
   </rollup>
+  <rollup name="memberinfo-rollup.css">
+    <template>awards_memberinfo.css</template>
+  </rollup>
 </css>

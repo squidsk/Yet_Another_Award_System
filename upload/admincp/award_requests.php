@@ -1,7 +1,7 @@
 <?php
 /*======================================================================*\
 || #################################################################### ||
-|| # Yet Another Award System v4.0.5 © by HacNho                      # ||
+|| # Yet Another Award System v4.0.6 © by HacNho                      # ||
 || # Copyright (C) 2005-2007 by HacNho, All rights reserved.          # ||
 || # ---------------------------------------------------------------- # ||
 || # For use with vBulletin Version 4.1.12                            # ||
@@ -17,7 +17,7 @@ error_reporting(E_ALL & ~E_NOTICE);
 
 // ##################### DEFINE IMPORTANT CONSTANTS #######################
 define('NO_REGISTER_GLOBALS', 1);
-define('THIS_SCRIPT', 'award_version_info.php');
+define('THIS_SCRIPT', 'award_request.php');
 
 // #################### PRE-CACHE TEMPLATES AND DATA ######################
 $phrasegroups = array();
@@ -195,7 +195,7 @@ if ($_GET['do'] == 'grant')
 
 	print_table_header("$vbphrase[add] $vbphrase[user_awards]", 2, 0);
 	print_description_row($vbphrase[give_user_award_desc]);
-	print_input_row($vbphrase['userid'], 'awarduserid', $award_request['award_req_uid']);
+	print_input_row($vbphrase['userid'], 'awarduserid', $award_request['award_rec_uid']);
 	print_input_row($vbphrase['username'], 'awardusername', $award_request['UserFor']);
 	print_textarea_row($vbphrase['award_reason'], 'issue_reason', $award_request['award_req_reason'], 3, 33);
 	print_checkbox_row($vbphrase['award_sendpm'], 'award_sendpm');

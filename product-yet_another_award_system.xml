@@ -3,9 +3,9 @@
 <product productid="yet_another_award_system" active="1">
 	<title>Yet Another Award System 4.0</title>
 	<description>Yet Another Awards System for vBulletin 4.0.x</description>
-	<version>4.0.5</version>
+	<version>4.0.6</version>
 	<url>http://www.vbulletin.org/forum/showthread.php?t=232684</url>
-	<versioncheckurl><![CDATA[http://www.vbulletin.org/forum/misc.php?do=checkversion&t=232684]]></versioncheckurl>
+	<versioncheckurl><![CDATA[http://www.vbulletin.org/forum/misc.php?do=productcheck&pid=YaAS4-40]]></versioncheckurl>
 	<dependencies>
 		<dependency dependencytype="vbulletin" minversion="4.0.2" maxversion="" />
 	</dependencies>
@@ -352,20 +352,30 @@
 
 <br />]]></template>
 		<template name="awards_categorybit" templatetype="template" date="1346432283" username="squid" version="4.0.4"><![CDATA[<a href="awards.php?{vb:raw session.sessionurl}award_cat_id={vb:raw award_cat.award_cat_id}" name="award_cat{vb:raw award_cat.award_cat_id}">{vb:raw award_cat.award_cat_title}</a>]]></template>
-		<template name="awards_css.css" templatetype="template" date="1358377531" username="squid" version="4.0.5"><![CDATA[/* Begin Postbit Legacay Formatting*/
-
+		<template name="awards_css.css" templatetype="template" date="1361309914" username="squid" version="4.0.6"><![CDATA[/* Begin Postbit Legacay Formatting*/
 
 .postbitlegacy .userinfo .yaas_postbit {
 	width:{vb:math {vb:stylevar postbitlegacy_userinfo_width}-{vb:math {vb:stylevar padding}*2}};
 	float: {vb:stylevar left};
+	margin: {vb:math {vb:stylevar padding}/2} 0;
 }
 
 /* End Postbit Legacay Formatting*/
 
+/* Begin Postbit Formatting */
+
+.postbit .userinfo .yaas_postbit {
+	margin-{vb:stylevar right}: {vb:stylevar padding};
+	float: {vb:stylevar right};
+	width: 150px;
+}
+
+/* End Postbit Formatting */
+
 /* Begin Style 1 Fieldset Formatting*/
 
 .yaas_postbit fieldset{
-	padding : 0 8px;
+	padding : 0 {vb:math {vb:stylevar padding}/2};
 	border : #0F1013 solid 1px;
 }
 
@@ -399,9 +409,8 @@ DIV.awards_showcase_awarddisplay {
 DIV.awards_showcase_infodisplay {
   <vb:comment>Customize here</vb:comment>
 }
+
 /* End PostbitCustom Formatting*/
-
-
 ]]></template>
 		<template name="awards_memberinfo.css" templatetype="template" date="1357927649" username="squid" version="4.0.5"><![CDATA[/* Start Memberinfo awards row spacing CSS */
 
@@ -423,9 +432,8 @@ DIV.awards_showcase_infodisplay {
 	<li><a class="navtab" href="awards.php{vb:raw session.sessionurl_q}">{vb:rawphrase awards}</a></li>
 </vb:if>
 ]]></template>
-		<template name="awards_postbit_display" templatetype="template" date="1357851969" username="squid" version="4.0.5"><![CDATA[<!-- show awards -->
+		<template name="awards_postbit_display" templatetype="template" date="1361306409" username="squid" version="4.0.6"><![CDATA[<!-- show awards -->
 <vb:if condition="$post[showuserawards]">
-<br />
 <div class="yaas_postbit">
 <fieldset><legend><a href="member.php?u={vb:raw post.userid}&amp;tab=myawards" title="{vb:rawphrase more_awards}">{vb:rawphrase award_showcase}</a></legend>
 	<div class="awards_showcase_awarddisplay">{vb:raw post.userawards}</div>
@@ -437,13 +445,11 @@ DIV.awards_showcase_infodisplay {
 	</div>
 </fieldset>
 </div>
-<br />
 </vb:if>
 <!-- /show awards -->
 ]]></template>
-		<template name="awards_postbit_display_customcss" templatetype="template" date="1357852306" username="squid" version="4.0.5"><![CDATA[<!-- show awards -->
+		<template name="awards_postbit_display_customcss" templatetype="template" date="1361306442" username="squid" version="4.0.6"><![CDATA[<!-- show awards -->
 <vb:if condition="$post[showuserawards]">
-<br />
 <div class="awards_postbit_customcss yaas_postbit">
 	<div class="awards_showcase_headtext"><a href="member.php?u={vb:raw post.userid}&amp;tab=myawards" title="{vb:rawphrase more_awards}">{vb:rawphrase award_showcase}</a></div>
 	<div class="awards_showcase_awarddisplay">{vb:raw post.userawards}</div>
@@ -454,7 +460,6 @@ DIV.awards_showcase_infodisplay {
 		</vb:if>
 	</div>
 </div>
-<br />
 </vb:if>
 <!-- /show awards -->
 ]]></template>
@@ -670,7 +675,7 @@ Award ID: [b][url={vb:raw vboptions.bburl}/awards.php#award{vb:raw award.award_i
 </table>
 </vb:if>
 <!-- [END HACK='Yet Another Awards System hack' AUTHOR='HacNho'] -->]]></template>
-		<template name="awards_userawards_bit" templatetype="template" date="1357924938" username="squid" version="4.0.5"><![CDATA[<tr>
+		<template name="awards_userawards_bit" templatetype="template" date="1360182543" username="squid" version="4.0.6"><![CDATA[<tr>
 	<vb:if condition="$vboptions[aw_showicon]">
 		<td class="memberinfo_awards_row<vb:if condition="$bgclass"> {vb:raw bgclass}</vb:if>" valign="middle" align="center">
 			<img src="{vb:raw award.award_icon_url}" border="0" alt="{vb:raw award.award_name}" />
@@ -692,7 +697,7 @@ Award ID: [b][url={vb:raw vboptions.bburl}/awards.php#award{vb:raw award.award_i
 			<table cellpadding="0" cellspacing="{vb:stylevar formspacer}" border="0">
 			<tr>
 				<td>
-					<i>{vb:rawphrase award_time}: {vb:raw award_issue_date} {vb:raw award_issue_time}</i><br />
+					<i>{vb:rawphrase award_time}: {vb:raw award_issue_date}, {vb:raw award_issue_time}</i><br />
 					<i>{vb:rawphrase award_reason}: {vb:raw award.issue_reason}</i>
 				</td>
 			</tr>
@@ -841,15 +846,13 @@ if(in_array('member.css',$matches[1]))
 		<plugin active="1" executionorder="5">
 			<title>YAAS - Member List Display</title>
 			<hookname>memberlist_bit</hookname>
-			<phpcode><![CDATA[
-				if ($vbulletin->options['cat_yaas_display_memberlist'])
+			<phpcode><![CDATA[if ($vbulletin->options['cat_yaas_display_memberlist'])
 				{
 				ob_start();
-				include('awards_memberlist.php');
+				include(DIR . '/awards_memberlist.php');
 				$memberListAwardsPHP = ob_get_contents();
 				ob_end_clean();
-				}
-]]></phpcode>
+				}]]></phpcode>
 		</plugin>
 		<plugin active="1" executionorder="6">
 			<title>YAAS in Member Profile - Profile</title>
@@ -862,7 +865,7 @@ if(in_array('member.css',$matches[1]))
 	'wrap' => false
 );
 
-require_once('./global.php'); 
+require_once(DIR . '/global.php'); 
 global $vbulletin;  
 require_once(DIR . '/includes/class_bbcode.php');
 $bbcode_parser = new vB_BbCodeParser($vbulletin, fetch_tag_list());
@@ -942,6 +945,14 @@ class vB_ProfileBlock_MyAwards extends vB_ProfileBlock
             }
         }
     }
+}]]></phpcode>
+		</plugin>
+		<plugin active="1" executionorder="5">
+			<title>YAAS - Tab set user</title>
+			<hookname>member_start</hookname>
+			<phpcode><![CDATA[if ($vbulletin->GPC['userid'] == 0)
+{
+   $vbulletin->GPC['userid'] = $vbulletin->userinfo['userid'];
 }]]></phpcode>
 		</plugin>
 		<plugin active="1" executionorder="5">
@@ -1211,16 +1222,16 @@ The {$vbulletin->options['bbtitle']} staff]]></phrase>
 			<phrase name="my_awards" date="0" username="Cypher" version=""><![CDATA[My Awards]]></phrase>
 			<phrase name="no_award_users" date="0" username="" version=""><![CDATA[No member has this award ]]></phrase>
 			<phrase name="no_awards_in_this_category" date="0" username="" version=""><![CDATA[There are no awards in this category. ]]></phrase>
-			<phrase name="points" date="0" username="" version="3.8.3"><![CDATA[Points]]></phrase>
 			<phrase name="request_award" date="0" username="" version=""><![CDATA[Request Award]]></phrase>
 			<phrase name="show_all_awards" date="0" username="" version=""><![CDATA[Show all awards ]]></phrase>
 			<phrase name="total_awards" date="0" username="" version=""><![CDATA[Total Awards]]></phrase>
-			<phrase name="total_points" date="0" username="" version="3.8.3"><![CDATA[Total Points]]></phrase>
 			<phrase name="unclassified_awards" date="0" username="" version=""><![CDATA[Un-classified Awards ]]></phrase>
 			<phrase name="user_awards" date="0" username="" version=""><![CDATA[User Awards ]]></phrase>
 			<phrase name="users_with_awards" date="0" username="" version=""><![CDATA[Users Who Have Already Recieved Awards]]></phrase>
 			<phrase name="users_with_thisaward" date="0" username="" version=""><![CDATA[Members who received this award]]></phrase>
-			<phrase name="yaas_version" date="1358533888" username="squid" version="4.0.5"><![CDATA[<center><a href='http://www.vbulletin.org/forum/showthread.php?t=232684'>Yet Another Awards System</a> v4.0.5</center>]]></phrase>
+			<phrase name="vb_navigation_link_link_otez_473_text" date="1359139938" username="squid" version="4.2.0"><![CDATA[My Awards]]></phrase>
+			<phrase name="vb_navigation_tab_tab_ota2_901_text" date="1359066444" username="squid" version="4.2.0"><![CDATA[Awards]]></phrase>
+			<phrase name="yaas_version" date="1360861486" username="squid" version="4.0.6"><![CDATA[<center><a href='http://www.vbulletin.org/forum/showthread.php?t=232684'>Yet Another Awards System</a> v4.0.6</center>]]></phrase>
 		</phrasetype>
 		<phrasetype name="vBulletin Settings" fieldname="vbsettings">
 			<phrase name="setting_aw_actioncolumn_desc" date="1174283089" username="Cypher" version="3.8.3"><![CDATA[Do you want to show the action coulumn in Awards list page]]></phrase>
@@ -1420,4 +1431,6 @@ Leave it 0 if you dont want to use this.]]></phrase>
 	</cronentries>
 	<faqentries>
 	</faqentries>
+	<navigation>
+	</navigation>
 </product>

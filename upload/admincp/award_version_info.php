@@ -1,7 +1,7 @@
 <?php
 /*======================================================================*\
 || #################################################################### ||
-|| # Yet Another Award System v4.0.5 © by HacNho                      # ||
+|| # Yet Another Award System v4.0.6 © by HacNho                      # ||
 || # Copyright (C) 2005-2007 by HacNho, All rights reserved.          # ||
 || # ---------------------------------------------------------------- # ||
 || # For use with vBulletin Version 4.1.12                            # ||
@@ -42,11 +42,11 @@ if (!can_administer('canadminusers'))
 print_cp_header($vbphrase['awards']);
 
 // Get Latest Version from vBulletin.org
-$productVerCheckURL = "http://www.vbulletin.org/forum/misc.php?do=productcheck&amp;pid=YaAS4-40";
+$productVerCheckURL = "http://www.vbulletin.org/forum/misc.php?do=productcheck&pid=YaAS4-40";
 $latestVersion = file_get_contents($productVerCheckURL);
-$latestVersion = ereg_replace("[^A-Za-z0-9.]", "", $latestVersion );
+$latestVersion = preg_replace("/[^A-Za-z0-9.]/", "", $latestVersion );
 $latestVersion = substr($latestVersion, 23);
-$latestVersion = ereg_replace("[^0-9.]", "", $latestVersion );
+$latestVersion = preg_replace("/[^0-9.]/", "", $latestVersion );
 
 // Get Current Version
 $array = $db->query_first("SELECT version FROM " . TABLE_PREFIX . "product WHERE productid = 'yet_another_award_system' LIMIT 1");  

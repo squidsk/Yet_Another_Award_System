@@ -1,13 +1,26 @@
+4.0.6 RELEASE:  (19/02/2013)
+    * Fixed - installation instructions being unclear as to what should be uploaded and steps to import the xml
+    * Fixed - deprecated (php 5.3) calls to egrep, replaced with preg_replace
+    * Fixed - a couple of other deprecation (php 5.3) issues
+    * Fixed - profile tab spacing restoration from 4.0.5 not working with files saved as css
+    * Fixed - postbit alignment (non-legacy)
+    * Fixed - award recommenders userid being placed in the userid field instead of award recipient's userid when granting an award
+    * Added - vertical spacing around the awards showcase in postbit legacy
+    * Updated - templates YAAS in Member Profile - Profile & YAAS - Member List Display to improve vbSSO compatibility
+    * Updated - admincp/modcp query for managing an award to sort users by issue date/time
+    * Updated - date display to add a comma between the date and time
+    * Updated - Version in version phrase
+
 4.0.5 RELEASE:  (29/01/2013)
-    * Fixed granting an award reqest/recommendation not deleting the request/recommendation
-    * Fixed requests not being displayed if the recipient or requestor accounts have been deleted
-    * Fixed emails not being sent when usernames are used to give an award and the send email option is chosen
-    * Fixed the award postbit display not always being in the correct location when using postbit_legacy
-    * Fixed the box around the fieldset being invisible (award postbit style 1) when css saved as a file
-    * Fixed the award postbit disappearing after editing a post
-    * Fixed deprecation errors due to php 5.3+ in various locations
-    * Restored the spacing between awards on the awards tab user profiles
-    * Renamed construct_depth_mark function to yaas_construct_depth_mark
+    * Fixed - granting an award reqest/recommendation not deleting the request/recommendation
+    * Fixed - requests not being displayed if the recipient or requestor accounts have been deleted
+    * Fixed - emails not being sent when usernames are used to give an award and the send email option is chosen
+    * Fixed - the award postbit display not always being in the correct location when using postbit_legacy
+    * Fixed - the box around the fieldset being invisible (award postbit style 1) when css saved as a file
+    * Fixed - the award postbit disappearing after editing a post
+    * Fixed - deprecation errors due to php 5.3+ in various locations
+    * Restored - the spacing between awards on the awards tab user profiles
+    * Renamed - construct_depth_mark function to yaas_construct_depth_mark
     * Updated - Version in version phrase
     * Removed - Four plugins that are no longer used (CSS - Cache Template, YAAS - Profile Tab, YAAS in Member Profile - Cache Template, YAAS - postbit display start)
 

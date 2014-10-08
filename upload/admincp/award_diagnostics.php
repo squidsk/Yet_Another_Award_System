@@ -1,7 +1,7 @@
 <?php
 /*======================================================================*\
 || #################################################################### ||
-|| # Yet Another Award System v4.0.5 © by HacNho                      # ||
+|| # Yet Another Award System v4.0.6 © by HacNho                      # ||
 || # Copyright (C) 2005-2007 by HacNho, All rights reserved.          # ||
 || # ---------------------------------------------------------------- # ||
 || # For use with vBulletin Version 4.1.12                            # ||
@@ -25,10 +25,6 @@ $specialtemplates = array();
 
 // ########################## REQUIRE BACK-END ############################
 require_once('./global.php');
-require_once(DIR . '/includes/class_bbcode.php');
-$bbcode_parser =& new vB_BbCodeParser($vbulletin, fetch_tag_list());
-
-$this_script = 'award_version_info';
 
 global $vbulletin;
 

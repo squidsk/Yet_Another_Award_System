@@ -1,7 +1,7 @@
 <?php
 /*======================================================================*\
 || #################################################################### ||
-|| # Yet Another Award System v4.0.5 © by HacNho                      # ||
+|| # Yet Another Award System v4.0.6 © by HacNho                      # ||
 || # Copyright (C) 2005-2007 by HacNho, All rights reserved.          # ||
 || # ---------------------------------------------------------------- # ||
 || # For use with vBulletin Version 4.1.12                            # ||
@@ -26,7 +26,7 @@ $specialtemplates = array();
 // ########################## REQUIRE BACK-END ############################
 require_once('./global.php');
 require_once(DIR . '/includes/class_bbcode.php');
-$bbcode_parser =& new vB_BbCodeParser($vbulletin, fetch_tag_list());
+$bbcode_parser = new vB_BbCodeParser($vbulletin, fetch_tag_list());
 
 $this_script = 'award';
 
@@ -545,15 +545,16 @@ if ($_REQUEST['do'] == 'awardusers')
 			FROM " . TABLE_PREFIX . "award_user AS au
 			LEFT JOIN " . TABLE_PREFIX . "user AS u USING (userid)
 			WHERE au.award_id=". $vbulletin->GPC['award_id'] ."
+			ORDER BY au.issue_time
 		");
 		while ($awarduser = $db->fetch_array($awardusers))
 		{
-				$awarduser['issue_reason'] = $bbcode_parser->parse($awarduser['issue_reason']);
-		construct_hidden_code('issue_id', $awarduser[issueid]);
+			$awarduser['issue_reason'] = $bbcode_parser->parse($awarduser['issue_reason']);
+			construct_hidden_code('issue_id', $awarduser[issueid]);
 			$cell = array();
 			$cell[] = "<b>$awarduser[username]</b>";
 			$cell[] = "$awarduser[issue_reason]";
-			$cell[] = '<span class="smallfont">' . vbdate($vbulletin->options['dateformat'], $awarduser['issue_time']) . ' ' . vbdate($vbulletin->options['timeformat'], $awarduser['issue_time']) . '</span>';
+			$cell[] = '<span class="smallfont">' . vbdate($vbulletin->options['dateformat'], $awarduser['issue_time']) . ', ' . vbdate($vbulletin->options['timeformat'], $awarduser['issue_time']) . '</span>';
 			$cell[] = "
 				<a href=\"award.php?$session[sessionurl]do=editissuedaward&amp;issue_id=$awarduser[issue_id]\">$vbphrase[edit]</a>
 				<a href=\"award.php?$session[sessionurl]do=removeissuedaward&amp;issue_id=$awarduser[issue_id]\">$vbphrase[remove]</a>
