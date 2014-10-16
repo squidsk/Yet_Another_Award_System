@@ -1,7 +1,7 @@
 <?php
 /*======================================================================*\
 || #################################################################### ||
-|| # Yet Another Award System v4.0.6 © by HacNho                      # ||
+|| # Yet Another Award System v4.0.8 © by HacNho                      # ||
 || # Copyright (C) 2005-2007 by HacNho, All rights reserved.          # ||
 || # ---------------------------------------------------------------- # ||
 || # For use with vBulletin Version 4.1.12                            # ||
@@ -17,7 +17,7 @@ error_reporting(E_ALL & ~E_NOTICE);
 
 // ##################### DEFINE IMPORTANT CONSTANTS #######################
 define('NO_REGISTER_GLOBALS', 1);
-define('THIS_SCRIPT', 'award_request.php');
+define('THIS_SCRIPT', 'YAAS_AWARD_REQUEST_ADMIN');
 
 // #################### PRE-CACHE TEMPLATES AND DATA ######################
 $phrasegroups = array();
@@ -27,8 +27,6 @@ $specialtemplates = array();
 require_once('./global.php');
 require_once(DIR . '/includes/class_bbcode.php');
 $bbcode_parser = new vB_BbCodeParser($vbulletin, fetch_tag_list());
-
-$this_script = 'award_requests';
 
 global $vbulletin;
 
@@ -47,6 +45,13 @@ if (empty($_REQUEST['do']))
 {
 	$_REQUEST['do'] = 'display';
 }
+
+$vbulletin->input->clean_array_gpc('p', array(
+	'award_id' => TYPE_UINT,
+	'awarduserid' => TYPE_UINT
+));
+
+log_admin_action(iif($vbulletin->GPC['award_id'] != 0 AND $vbulletin->GPC['awarduserid'] != 0, "award_id = " . $vbulletin->GPC['award_id'] . ", userid = " . $vbulletin->GPC['awarduserid']));
 
 if ($_REQUEST['do'] == 'display')
 {
@@ -101,7 +106,7 @@ if ($_REQUEST['do'] == 'delete')
 	}
 	else
 	{
-		$result = $vbulletin->db->query_write("DELETE FROM " . TABLE_PREFIX . "award_requests WHERE award_req_id = " . $vbulletin->GPC['taskid'] );
+		$result = $db->query_write("DELETE FROM " . TABLE_PREFIX . "award_requests WHERE award_req_id = " . $vbulletin->GPC['taskid'] );
 		define('CP_REDIRECT', 'award_requests.php?do=display');
 		if(!$vbulletin->db->affected_rows()){
 			print_stop_message('yaas_invalid_award_request');
@@ -231,7 +236,7 @@ if($_POST['do'] == 'dogrant')
 		$user = $db->query_first("
 			SELECT userid, username, email
 			FROM " . TABLE_PREFIX . "user
-			WHERE username = '". $db->escape_string($vbulletin->GPC['awardusername']) ."'
+			WHERE username = '" . $db->escape_string($vbulletin->GPC['awardusername']) ."'
 		");
 	}
 	else
@@ -254,7 +259,7 @@ if($_POST['do'] == 'dogrant')
 	$db->query_write("
 		INSERT INTO " . TABLE_PREFIX . "award_user
 		(award_id, userid, issue_reason, issue_time) 
-		VALUES ( '". $vbulletin->GPC['award_id'] ."', '". $user['userid'] ."', '" . addslashes($vbulletin->GPC['issue_reason']) . "', " . time() . ")
+		VALUES ( '". $vbulletin->GPC['award_id'] ."', '". $user['userid'] ."', '" . $db->escape_string($vbulletin->GPC['issue_reason']) . "', " . time() . ")
 	");
 
 	$db->query_write("
@@ -266,8 +271,7 @@ if($_POST['do'] == 'dogrant')
 	{
 		if ($vbulletin->options['award_pm_fromuserid'] != 0)
 		{
-//		    $fromuser = fetch_userinfo($vbulletin->options['award_pm_fromuserid']);
-		    $fromuser = verify_id('user', $vbulletin->options['award_pm_fromuserid']);
+			$fromuser = verify_id('user', $vbulletin->options['award_pm_fromuserid'], true, true);
 		}
 		else
 		{
@@ -280,7 +284,12 @@ if($_POST['do'] == 'dogrant')
 		$award_name = $vbulletin->GPC['award_name'];
 		$award_img_url = $vbulletin->GPC['award_img_url'];
 		$issue_reason = $vbulletin->GPC['issue_reason'];
+
 		eval(fetch_email_phrases('award_pm'));
+
+		//relative urls are converted to absolute so that the [img] bbcode works
+		$message = preg_replace("#(\[img\])(?=(?!http)(?!https))([^\s]+)(\[/img\])#", '$1' . $vbulletin->options['bburl'] . '/$2$3', $message);
+
 		$pmdm =& datamanager_init('PM', $vbulletin, ERRTYPE_ARRAY);
 		$pmdm->set('fromuserid', $fromuser['userid']);
 		$pmdm->set('fromusername', $fromuser['username']); 
@@ -311,7 +320,7 @@ if($_POST['do'] == 'dogrant')
 	{
 		if ($vbulletin->options['award_pm_fromuserid'] != 0)
 		{
-		    $fromuser = verify_id('user', $vbulletin->options['award_pm_fromuserid'],'true','true');
+			$fromuser = verify_id('user', $vbulletin->options['award_pm_fromuserid'],'true','true');
 		}
 		else
 		{
@@ -323,7 +332,11 @@ if($_POST['do'] == 'dogrant')
 		$award_name = $vbulletin->GPC['award_name'];
 		$award_img_url = $vbulletin->GPC['award_img_url'];
 		$issue_reason = $vbulletin->GPC['issue_reason'];
+
 		eval(fetch_email_phrases('award_pm'));
+
+		//relative urls are converted to absolute so that the [img] bbcode works
+		$message = preg_replace("#(\[img\])(?=(?!http)(?!https))([^\s]+)(\[/img\])#", '$1' . $vbulletin->options['bburl'] . '/$2$3', $message);
 
 		vbmail($user['email'], $subject, $message, true, $fromuser['email']);
 	}

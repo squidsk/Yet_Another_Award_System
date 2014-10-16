@@ -1,7 +1,7 @@
 <?php
 /*======================================================================*\
 || #################################################################### ||
-|| # Yet Another Award System v4.0.6 © by HacNho                      # ||
+|| # Yet Another Award System v4.0.8 © by HacNho                      # ||
 || # Copyright (C) 2005-2007 by HacNho, All rights reserved.          # ||
 || # ---------------------------------------------------------------- # ||
 || # For use with vBulletin Version 4.1.12                            # ||
@@ -382,8 +382,7 @@ if ($_POST['do'] == 'dogiveaward')
 	{
 		if ($vbulletin->options['award_pm_fromuserid'] != 0)
 		{
-//		    $fromuser = fetch_userinfo($vbulletin->options['award_pm_fromuserid']);
-		    $fromuser = verify_id('user', $vbulletin->options['award_pm_fromuserid']);
+		    $fromuser = verify_id('user', $vbulletin->options['award_pm_fromuserid'], true, true);
 		}
 		else
 		{

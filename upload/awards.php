@@ -1,7 +1,7 @@
 <?php
 /*======================================================================*\
 || #################################################################### ||
-|| # Yet Another Award System v4.0.6 © by HacNho                      # ||
+|| # Yet Another Award System v4.0.8 © by HacNho                      # ||
 || # Copyright (C) 2005-2007 by HacNho, All rights reserved.          # ||
 || # ---------------------------------------------------------------- # ||
 || # For use with vBulletin Version 4.1.12                            # ||
@@ -148,7 +148,7 @@ $totalcols = $vbulletin->options['aw_showicon']+ $vbulletin->options['aw_showima
 
 			// Obtain list of users of each award
 			$allawardusers =  $db->query_read("
-			SELECT u.userid, u.username, au.award_id
+			SELECT u.userid, u.username, au.award_id, IF(u.displaygroupid = 0, u.usergroupid, u.displaygroupid) AS displaygroupid
 			FROM " . TABLE_PREFIX . "award_user AS au
 			LEFT JOIN " . TABLE_PREFIX . "user AS u ON (u.userid = au.userid)
 			GROUP BY u.userid, u.username, au.award_id
@@ -158,7 +158,7 @@ $totalcols = $vbulletin->options['aw_showicon']+ $vbulletin->options['aw_showima
 			{
 				$awarduserscache[$au['award_id']][$au['userid']] = $au;
 			}
-			$db->free_result($allawardusers);	
+			$db->free_result($allawardusers);
 	
 	cache_award_cats(-1,0,$vbulletin->GPC['award_cat_id']);
 
@@ -186,13 +186,17 @@ $totalcols = $vbulletin->options['aw_showicon']+ $vbulletin->options['aw_showima
 							{
 								//- VB3 -// eval('$awarduserslist .= ", ' . fetch_template('awards_awardusers_bit') . '";');
 								//- BEGIN VB4 -//
+								fetch_musername($awardusers);
 								$templater = vB_Template::create('awards_awardusers_bit');
 									$templater->register('awardusers', $awardusers);
 								$awarduserslist .= $templater->render();
 								//- END VB4 -//
 							}
 						}
-						$awarduserslist = substr($awarduserslist , 2); // get rid of initial comma
+						$indexOfFirstComma = strpos($awarduserslist, ',');
+						if($indexOfFirstComma !== false)
+							$awarduserslist =  substr($awarduserslist , 0, $indexOfFirstComma) . substr($awarduserslist , $indexOfFirstComma+2); // get rid of initial comma
+
 						if (($vbulletin->options['aw_display_memberlimit'] > 0) AND ($aw_ui > $vbulletin->options['aw_display_memberlimit']))
 						{
 							$awarduserslist .= "<br> <div align=\"right\"><font size=\"-1\"><a href=\"awards.php?do=viewaward&amp;award_id=$award[award_id]\">$vbphrase[aw_more_users]</a></font></div>";
@@ -263,7 +267,7 @@ if ($_REQUEST['do'] == 'viewaward')
 
 			// Obtain list of users of each award
 			$allawardusers =  $db->query_read("
-			SELECT u.userid, u.username, au.award_id
+			SELECT u.userid, u.username, au.award_id, IF(u.displaygroupid = 0, u.usergroupid, u.displaygroupid) AS displaygroupid
 			FROM " . TABLE_PREFIX . "award_user AS au
 			LEFT JOIN " . TABLE_PREFIX . "user AS u ON (u.userid = au.userid)
 			WHERE au.award_id = " . $vbulletin->GPC['award_id'] . "
@@ -274,7 +278,7 @@ if ($_REQUEST['do'] == 'viewaward')
 			{
 				$awarduserscache[$au['award_id']][$au['userid']] = $au;
 			}
-			$db->free_result($allawardusers);	
+			$db->free_result($allawardusers);
 
 			$award = $db->query_first("SELECT * FROM " . TABLE_PREFIX . "award WHERE award_id = ".$vbulletin->GPC['award_id'] ."");
 
@@ -291,14 +295,17 @@ if ($_REQUEST['do'] == 'viewaward')
 								$aw_ui++;
 								//- VB3 -// eval('$awarduserslist .= ", ' . fetch_template('awards_awardusers_bit') . '";');
 								//- BEGIN VB4 -//
+								fetch_musername($awardusers);
 								$newTemplate = vB_Template::create('awards_awardusers_bit');
 									$newTemplate->register('awardusers', $awardusers);
 								$awarduserslist .= $newTemplate->render();  	
-								//- END VB4 -//								
+								//- END VB4 -//
 								
 						}
 					}
-					$awarduserslist = substr($awarduserslist , 2); // get rid of initial comma
+					$indexOfFirstComma = strpos($awarduserslist, ',');
+					if($indexOfFirstComma !== false)
+						$awarduserslist =  substr($awarduserslist , 0, $indexOfFirstComma) . substr($awarduserslist , $indexOfFirstComma+2); // get rid of initial comma
 				}
 
 	$navbits = construct_navbits(array('' => $vbphrase['awards']));

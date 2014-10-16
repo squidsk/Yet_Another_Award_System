@@ -1,7 +1,7 @@
 <?php
 /*======================================================================*\
 || #################################################################### ||
-|| # Yet Another Award System v4.0.6 © by HacNho                      # ||
+|| # Yet Another Award System v4.0.8 © by HacNho                      # ||
 || # Copyright (C) 2005-2007 by HacNho, All rights reserved.          # ||
 || # ---------------------------------------------------------------- # ||
 || # For use with vBulletin Version 4.1.12                            # ||
@@ -17,7 +17,7 @@ error_reporting(E_ALL & ~E_NOTICE);
 
 // ##################### DEFINE IMPORTANT CONSTANTS #######################
 define('NO_REGISTER_GLOBALS', 1);
-define('THIS_SCRIPT', 'award.php');
+define('THIS_SCRIPT', 'YAAS_AWARD_ADMIN');
 
 // #################### PRE-CACHE TEMPLATES AND DATA ######################
 $phrasegroups = array();
@@ -27,8 +27,6 @@ $specialtemplates = array();
 require_once('./global.php');
 require_once(DIR . '/includes/class_bbcode.php');
 $bbcode_parser = new vB_BbCodeParser($vbulletin, fetch_tag_list());
-
-$this_script = 'award';
 
 // ######################## CHECK ADMIN PERMISSIONS #######################
 if (!can_administer('canadminusers'))
@@ -144,6 +142,17 @@ if (empty($_REQUEST['do']))
 	$_REQUEST['do'] = 'manage';
 }
 
+$vbulletin->input->clean_array_gpc('r', array(
+	'award_name' => TYPE_STR, 
+	'award_id' => TYPE_UINT,
+	'awarduserid' => TYPE_UINT,
+	'awardusername' => TYPE_STR
+));
+
+$extra_log_info = iif($vbulletin->GPC['award_id'] != 0, "award_id = " . $vbulletin->GPC['award_id'] . iif($vbulletin->GPC['awarduserid'] != 0, ", userid = " . $vbulletin->GPC['awarduserid'], iif($vbulletin->GPC['awardusername'] <> '', ', awardusername = ' . $vbulletin->GPC['awardusername'])), iif($vbulletin->GPC['award_name'] != 0, "award_name = " . $vbulletin->GPC['award_name']));
+
+log_admin_action($extra_log_info);
+
 // ###################### Start insert #######################
 if ($_POST['do'] == 'insert')
 {
@@ -154,7 +163,7 @@ if ($_POST['do'] == 'insert')
 		'award_icon_url' => TYPE_STR, 
 		'award_img_url' => TYPE_STR,
 		'award_cat_id' => TYPE_INT,
-		'award_displayorder' => TYPE_INT,	
+		'award_displayorder' => TYPE_INT,
 		'award_allowrequest' => TYPE_INT,
 		'award_allowrecommend' => TYPE_INT,
 		'award_active' => TYPE_INT,
@@ -346,7 +355,7 @@ if ($_REQUEST['do'] == 'remove')
 	print_table_header($vbphrase['confirm_deletion']);
 	print_description_row($vbphrase['are_you_sure_you_want_to_delete_this_award']);
 
-		print_description_row('<blockquote>' . construct_phrase($vbphrase["are_you_sure_you_want_to_delete_this_award_x_y"], $award['award_name'], $award['award_desc']) . '</blockquote>');
+	print_description_row('<blockquote>' . construct_phrase($vbphrase["are_you_sure_you_want_to_delete_this_award_x_y"], $award['award_name'], $award['award_desc']) . '</blockquote>');
 	print_submit_row($vbphrase['yes'], '', 2, $vbphrase['no']);
 }
 
@@ -383,7 +392,8 @@ if ($_POST['do'] == 'doremoveissuedaward')
 if ($_REQUEST['do'] == 'removeissuedaward')
 {
 	$vbulletin->input->clean_array_gpc('r', array(
-		'issue_id' => TYPE_INT
+		'issue_id' => TYPE_INT,
+		'awarduserid' => TYPE_UINT
 	));
 
 	if (!empty($vbulletin->GPC['issue_id']))
@@ -408,6 +418,7 @@ if ($_REQUEST['do'] == 'removeissuedaward')
 
 	print_form_header('award', 'doremoveissuedaward');
 	construct_hidden_code('issue_id', $vbulletin->GPC['issue_id']);
+	construct_hidden_code('awarduserid', $vbulletin->GPC['awarduserid']);
 	construct_hidden_code('award_id', $award['award_id']);
 	print_table_header($vbphrase['confirm_deletion']);
 	print_description_row($vbphrase['are_you_sure_you_want_to_delete_this_award']);
@@ -598,8 +609,7 @@ if ($_POST['do'] == 'dogiveaward')
 	{
 		if ($vbulletin->options['award_pm_fromuserid'] != 0)
 		{
-//		    $fromuser = fetch_userinfo($vbulletin->options['award_pm_fromuserid']);
-		    $fromuser = verify_id('user', $vbulletin->options['award_pm_fromuserid']);
+			$fromuser = verify_id('user', $vbulletin->options['award_pm_fromuserid'], true, true);
 		}
 		else
 		{
@@ -612,7 +622,12 @@ if ($_POST['do'] == 'dogiveaward')
 		$award_name = $vbulletin->GPC['award_name'];
 		$award_img_url = $vbulletin->GPC['award_img_url'];
 		$issue_reason = $vbulletin->GPC['issue_reason'];
+
 		eval(fetch_email_phrases('award_pm'));
+
+		//relative urls are converted to absolute so that the [img] bbcode works
+		$message = preg_replace("#(\[img\])(?=(?!http)(?!https))([^\s]+)(\[/img\])#", '$1' . $vbulletin->options['bburl'] . '/$2$3', $message);
+
 		$pmdm =& datamanager_init('PM', $vbulletin, ERRTYPE_ARRAY);
 		$pmdm->set('fromuserid', $fromuser['userid']);
 		$pmdm->set('fromusername', $fromuser['username']); 
@@ -643,7 +658,7 @@ if ($_POST['do'] == 'dogiveaward')
 	{
 		if ($vbulletin->options['award_pm_fromuserid'] != 0)
 		{
-		    $fromuser = verify_id('user', $vbulletin->options['award_pm_fromuserid'],'true','true');
+			$fromuser = verify_id('user', $vbulletin->options['award_pm_fromuserid'],'true','true');
 		}
 		else
 		{
@@ -787,7 +802,7 @@ if ($_REQUEST['do'] == 'awardusers')
 			$cell[] = '<span class="smallfont">' . vbdate($vbulletin->options['dateformat'], $awarduser['issue_time']) . ', ' . vbdate($vbulletin->options['timeformat'], $awarduser['issue_time']) . '</span>';
 			$cell[] = "
 				<a href=\"award.php?$session[sessionurl]do=editissuedaward&amp;issue_id=$awarduser[issue_id]\">$vbphrase[edit]</a>
-				<a href=\"award.php?$session[sessionurl]do=removeissuedaward&amp;issue_id=$awarduser[issue_id]\">$vbphrase[remove]</a>
+				<a href=\"award.php?$session[sessionurl]do=removeissuedaward&amp;issue_id=$awarduser[issue_id]&amp;awarduserid=$awarduser[userid]\">$vbphrase[remove]</a>
 			";
 			$cell[] = "
 				<label for=\"d_$awarduser[issue_id]\"><input type=\"checkbox\" name=\"validate[$awarduser[issue_id]]\" id=\"d_$user[userid]\" value=\"-1\" tabindex=\"1\"/></label>
@@ -965,7 +980,7 @@ if ($_REQUEST['do'] == 'manage')
 		$cell[] = "<strong>$award[award_name]<dfn>{$award[award_desc]}</dfn></strong>";
 		$cell[] = "$awarduserslist";
 		$cell[] = "
-					<input style=\"text-align: center\" type=\"text\" class=\"bginput\" name=\"order[" . $award[award_id] . "]\" tabindex=\"1\" value=\"$award[award_displayorder]\" size=\"2\" title=\"" . $vbphrase['display_order'] . "\" class=\"smallfont\" />
+					<input style=\"text-align: center\" type=\"text\" class=\"bginput smallfont\" name=\"order[" . $award[award_id] . "]\" tabindex=\"1\" value=\"$award[award_displayorder]\" size=\"2\" title=\"" . $vbphrase['display_order'] . "\" />
 		";
 		$cell[] = "" .
 				construct_link_code($vbphrase['edit'], "award.php?$session[sessionurl]do=edit&amp;award_id=$award[award_id]") .
@@ -1040,7 +1055,7 @@ if ($_REQUEST['do'] == 'manage')
 				if (!$vbulletin->GPC['massmove'])
 				{
 							$cell[] = "
-										<input style=\"text-align: center\" type=\"text\" class=\"bginput\" name=\"order[" . $award[award_id] . "]\" tabindex=\"1\" value=\"$award[award_displayorder]\" size=\"2\" title=\"" . $vbphrase['display_order'] . "\" class=\"smallfont\" />
+										<input style=\"text-align: center\" type=\"text\" class=\"bginput smallfont\" name=\"order[" . $award[award_id] . "]\" tabindex=\"1\" value=\"$award[award_displayorder]\" size=\"2\" title=\"" . $vbphrase['display_order'] . "\" />
 							";
 				}
 					else

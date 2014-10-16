@@ -1,7 +1,7 @@
 <?php
 /*======================================================================*\
 || #################################################################### ||
-|| # Yet Another Award System v4.0.6 © by HacNho                      # ||
+|| # Yet Another Award System v4.0.8 © by HacNho                      # ||
 || # Copyright (C) 2005-2007 by HacNho, All rights reserved.          # ||
 || # ---------------------------------------------------------------- # ||
 || # For use with vBulletin Version 4.1.12                            # ||
@@ -17,7 +17,7 @@ error_reporting(E_ALL & ~E_NOTICE);
 
 // ##################### DEFINE IMPORTANT CONSTANTS #######################
 define('NO_REGISTER_GLOBALS', 1);
-define('THIS_SCRIPT', 'award_cat.php');
+define('THIS_SCRIPT', 'YAAS_AWARD_CAT_ADMIN');
 
 // #################### PRE-CACHE TEMPLATES AND DATA ######################
 $phrasegroups = array();
@@ -25,7 +25,6 @@ $specialtemplates = array();
 
 // ########################## REQUIRE BACK-END ############################
 require_once('./global.php');
-// require_once('./includes/adminfunctions_profilefield.php');
 
 // ######################## CHECK ADMIN PERMISSIONS #######################
 if (!can_administer('canadminusers'))
