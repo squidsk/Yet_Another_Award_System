@@ -1,7 +1,7 @@
 <?php
 /*======================================================================*\
 || #################################################################### ||
-|| # Yet Another Award System v4.0.8 © by HacNho                      # ||
+|| # Yet Another Award System v4.0.9 © by HacNho                      # ||
 || # Copyright (C) 2005-2007 by HacNho, All rights reserved.          # ||
 || # ---------------------------------------------------------------- # ||
 || # For use with vBulletin Version 4.1.12                            # ||
@@ -140,24 +140,24 @@ if (empty($_REQUEST['do']))
 if ($_POST['do'] == 'killcat')
 {
 	$vbulletin->input->clean_array_gpc('p', array(
-		'award_cat_id' => TYPE_INT,
-		'destinationid' => TYPE_INT,
-		'deleteitems' => TYPE_INT
+		'award_cat_id'	=> TYPE_INT,
+		'destinationid'	=> TYPE_INT,
+		'deleteitems'	=> TYPE_INT
 	));
 
 	if ($vbulletin->GPC['deleteitems'] == 1)
 	{
-			// get awards belong to the category
+		// get awards belong to the category
 		$awards =  $db->query_read("
 			SELECT award_id
 			FROM " . TABLE_PREFIX . "award
 			WHERE award_cat_id = ". $vbulletin->GPC['award_cat_id'] ."
 		");
-			while( $aw = $db->fetch_array($awards))
-			{
-				$db->query_write("DELETE FROM " . TABLE_PREFIX . "award_user WHERE award_id = $aw[award_id]");
-			}
-	
+		while( $aw = $db->fetch_array($awards))
+		{
+			$db->query_write("DELETE FROM " . TABLE_PREFIX . "award_user WHERE award_id = $aw[award_id]");
+		}
+
 		$db->query_write("DELETE FROM " . TABLE_PREFIX . "award WHERE award_cat_id = ". $vbulletin->GPC['award_cat_id'] ."");
 		$extra = "vbphrase[awards_deleted]";
 	}
@@ -177,10 +177,10 @@ if ($_POST['do'] == 'killcat')
 	}
 
 	$db->query_write("
-			UPDATE " . TABLE_PREFIX . "award_cat
-			SET award_cat_parentid = '-1'
-			WHERE award_cat_parentid = ". $vbulletin->GPC['award_cat_id'] ."
-		");
+		UPDATE " . TABLE_PREFIX . "award_cat
+		SET award_cat_parentid = '-1'
+		WHERE award_cat_parentid = ". $vbulletin->GPC['award_cat_id'] ."
+	");
 	$db->query_write("DELETE FROM " . TABLE_PREFIX . "award_cat WHERE award_cat_id = ". $vbulletin->GPC['award_cat_id'] ."");
 
 	define('CP_REDIRECT', "award_cat.php?do=modifycat");
@@ -191,7 +191,7 @@ if ($_POST['do'] == 'killcat')
 if ($_REQUEST['do'] == 'removecat')
 {
 	$vbulletin->input->clean_array_gpc('r', array(
-		'award_cat_id' => TYPE_INT
+		'award_cat_id'	=> TYPE_INT
 	));
 
 	$categories = $db->query_read("
@@ -235,16 +235,17 @@ if ($_REQUEST['do'] == 'removecat')
 if ($_POST['do'] == 'insertcat')
 {
 	$vbulletin->input->clean_array_gpc('r', array(
-		'award_cat_title' => TYPE_NOHTML,
-		'award_cat_desc' => TYPE_NOHTML,
-		'award_cat_displayorder' => TYPE_INT,
-		'award_cat_parentid' => TYPE_INT
+		'award_cat_title'			=> TYPE_NOHTML,
+		'award_cat_desc'			=> TYPE_NOHTML,
+		'award_cat_displayorder'	=> TYPE_INT,
+		'award_cat_parentid'		=> TYPE_INT
 	));
 
-	$db->query_write("INSERT INTO " . TABLE_PREFIX . "award_cat (
-		award_cat_id,award_cat_title,award_cat_desc,award_cat_displayorder, award_cat_parentid
-	) VALUES (
-		NULL, '" . addslashes($vbulletin->GPC['award_cat_title']) . "','" . addslashes($vbulletin->GPC['award_cat_desc']) . "','". intval($vbulletin->GPC['award_cat_displayorder']) ."', '". intval($vbulletin->GPC['award_cat_parentid']) ."'
+	$db->query_write("
+		INSERT INTO " . TABLE_PREFIX . "award_cat
+			(award_cat_id,award_cat_title,award_cat_desc,award_cat_displayorder, award_cat_parentid)
+		VALUES
+			(NULL, '" . addslashes($vbulletin->GPC['award_cat_title']) . "','" . addslashes($vbulletin->GPC['award_cat_desc']) . "','". intval($vbulletin->GPC['award_cat_displayorder']) ."', '". intval($vbulletin->GPC['award_cat_parentid']) ."'
 	)");
 
 	define('CP_REDIRECT', "award_cat.php?do=modifycat");
@@ -271,11 +272,11 @@ if ($_REQUEST['do'] == 'addcat')
 if ($_POST['do'] == 'updatecat')
 {
 	$vbulletin->input->clean_array_gpc('p', array(
-		'award_cat_id' => TYPE_INT,
-		'award_cat_title' => TYPE_NOHTML,
-		'award_cat_desc' => TYPE_NOHTML,
-		'award_cat_displayorder' => TYPE_INT,
-		'award_cat_parentid' => TYPE_INT
+		'award_cat_id'				=> TYPE_INT,
+		'award_cat_title'			=> TYPE_NOHTML,
+		'award_cat_desc'			=> TYPE_NOHTML,
+		'award_cat_displayorder'	=> TYPE_INT,
+		'award_cat_parentid'		=> TYPE_INT
 	));
 
 	if ($vbulletin->GPC['award_cat_id'] == $vbulletin->GPC['award_cat_parentid'])
@@ -302,7 +303,7 @@ if ($_POST['do'] == 'updatecat')
 if ($_REQUEST['do'] == 'editcat')
 {
 	$vbulletin->input->clean_array_gpc('r', array(
-		'award_cat_id' => TYPE_INT
+		'award_cat_id'	=> TYPE_INT
 	));
 
 	$category = $db->query_first("
@@ -328,7 +329,7 @@ if ($_REQUEST['do'] == 'editcat')
 if ($_REQUEST['do'] == 'updateorder')
 {
 	$vbulletin->input->clean_array_gpc('r', array(
-		'order' => TYPE_NOCLEAN,
+		'order'	=> TYPE_NOCLEAN,
 	));
 
 	if (is_array($vbulletin->GPC['order']))
@@ -359,12 +360,10 @@ if ($_REQUEST['do'] == 'updateorder')
 // ###################### Start Modify Categories #######################
 if ($_REQUEST['do'] == 'modifycat')
 {
-
-// ============================ 
- 	cache_award_cats();
- 	if (empty($award_cat_cache))
- 	{
-		print_stop_message("no_x_categories_found","$vbphrase[awards]", "award_cat.php?$session[sessionurl]do=addcat");
+	cache_award_cats();
+	if (empty($award_cat_cache))
+	{
+		print_stop_message("yaas_no_award_categories_found", "award_cat.php?$session[sessionurl]do=addcat");
 	}
 	print_form_header('award_cat', 'updateorder');
 	print_table_header($vbphrase['award_cat_manager'], 4);
@@ -376,25 +375,23 @@ if ($_REQUEST['do'] == 'modifycat')
 
 		$cell = array();
 		$cell[] = "<strong>" . construct_depth_mark($award_cat['depth'], '- - ', '- - ') . "<a href=\"award.php?$session[sessionurl]do=manage&amp;award_cat_id=$award_cat[award_cat_id]\">$award_cat[award_cat_title]</a></strong><div style=\"padding-left: 16px\">{$award_cat[award_cat_desc]}</div>";
+		$cell[] = vb_number_format($award_cat['items']) . ' ' . "$vbphrase[awards]";
+		$cell[] = "<input type=\"text\" class=\"bginput\" name=\"order[$award_cat[award_cat_id]]\" value=\"$award_cat[award_cat_displayorder]\" tabindex=\"1\" size=\"3\" />";
+		$cell[] =
+			construct_link_code($vbphrase['mass_move'], "award.php?$session[sessionurl]do=manage&amp;massmove=1&amp;award_cat_id=$award_cat[award_cat_id]") .
+			construct_link_code($vbphrase['view'], "award.php?$session[sessionurl]do=manage&amp;award_cat_id=$award_cat[award_cat_id]") .
+			construct_link_code($vbphrase['edit'], "award_cat.php?$session[sessionurl]do=editcat&amp;award_cat_id=$award_cat[award_cat_id]").
+			construct_link_code($vbphrase['delete'], "award_cat.php?$session[sessionurl]do=removecat&amp;award_cat_id=$award_cat[award_cat_id]");
 
-			$cell[] = vb_number_format($award_cat['items']) . ' ' . "$vbphrase[awards]";
-			$cell[] = "<input type=\"text\" class=\"bginput\" name=\"order[$award_cat[award_cat_id]]\" value=\"$award_cat[award_cat_displayorder]\" tabindex=\"1\" size=\"3\" />";
-			$cell[] =
-				construct_link_code($vbphrase['mass_move'], "award.php?$session[sessionurl]do=manage&amp;massmove=1&amp;award_cat_id=$award_cat[award_cat_id]") .
-				construct_link_code($vbphrase['view'], "award.php?$session[sessionurl]do=manage&amp;award_cat_id=$award_cat[award_cat_id]") .
-				construct_link_code($vbphrase['edit'], "award_cat.php?$session[sessionurl]do=editcat&amp;award_cat_id=$award_cat[award_cat_id]").
-				construct_link_code($vbphrase['delete'], "award_cat.php?$session[sessionurl]do=removecat&amp;award_cat_id=$award_cat[award_cat_id]");
-				
 		print_cells_row($cell, 0, '', -1);
 	}
-		print_submit_row($vbphrase['save_display_order'], NULL, 4);
-		echo "<p align=\"center\">" . construct_link_code($vbphrase['add_new_award_category'], "award_cat.php?$session[sessionurl]do=addcat") . construct_link_code($vbphrase['show_all_awards'], "award.php?$session[sessionurl]do=manage")."</p>";
-		
+
+	print_submit_row($vbphrase['save_display_order'], NULL, 4);
+	echo "<p align=\"center\">" . construct_link_code($vbphrase['add_new_award_category'], "award_cat.php?$session[sessionurl]do=addcat") . construct_link_code($vbphrase['show_all_awards'], "award.php?$session[sessionurl]do=manage")."</p>";
+
 	print_table_footer();
 }
 
-
 // #############################################################################
 print_cp_footer();
-
 ?>

@@ -17,26 +17,31 @@
 			<phrase>add_new_award</phrase>
 			<link>award.php?do=add</link>
 		</navoption>
-		
+
 		<navoption displayorder="4">
 			<phrase>award_manager</phrase>
 			<link>award.php?do=manage</link>
 		</navoption>
-		
+
 		<navoption displayorder="5">
+			<phrase>award_user_manager</phrase>
+			<link>award_user.php?do=search</link>
+		</navoption>
+
+		<navoption displayorder="6">
 			<phrase>award_requests</phrase>
 			<link>award_requests.php?do=display</link>
 		</navoption>
-		
+
 		<navoption displayorder="98">
 			<phrase>award_diagnostics</phrase>
 			<link>award_diagnostics.php</link>
 		</navoption>
-		
+
 		<navoption displayorder="99">
 			<phrase>award_version_info</phrase>
 			<link>award_version_info.php</link>
 		</navoption>
-		
+
 	</navgroup>
 </navgroups>

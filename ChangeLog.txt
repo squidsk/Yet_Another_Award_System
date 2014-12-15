@@ -1,41 +1,56 @@
+4.0.9 RELEASE:  (15/12/2014)
+    * Added - Handling of user merges
+    * Added - Handling of user deletes
+    * Added - Manage awards on per user basis
+    * Added - Extra info to the logs for mass removal and editing of issued awards
+    * Added - Ability to collapse categories on awards.php
+    * Added - Checksum file for checking for suspect file versions
+    * Added - Various Missing phrases
+    * Fixed - Memberlist not showing awards when option is active
+    * Fixed - Navtab not being selected (vb version < 4.2)
+    * Fixed - Category title not being displayed on awards.php
+    * Fixed - Logging not working in modcp
+    * Fixed - A few other minor bugs
+    * Updated - Verion in version phrase
+
 4.0.8 RELEASE:  (16/02/2014)
-    * Fixed - awards tab disappearing when upgrading from 4.0.6 or earlier
-    * Added - username colouring to awards.php
+    * Fixed - Awards tab disappearing when upgrading from 4.0.6 or earlier
+    * Added - Username colouring to awards.php
     * Updated - Version in version phrase
 
 4.0.7 RELEASE:  (13/02/2014)
-    * Fixed - specifying PM userid not working
-    * Fixed - relative URL of award images not being changed to absolute URL in PM/email body text
-    * Fixed - awards tab not showing user css customization
-    * Fixed - templates not being cached for usernote.php
-    * Fixed - template html comment being displayed on awards.php when template comments are turned on
-    * Fixed - a few other minor bugs
-    * Added - logging to log for awarding/removing awards (admincp & modcp)
+    * Fixed - Specifying PM userid not working
+    * Fixed - Relative URL of award images not being changed to absolute URL in PM/email body text
+    * Fixed - Awards tab not showing user css customization
+    * Fixed - Templates not being cached for usernote.php
+    * Fixed - Template html comment being displayed on awards.php when template comments are turned on
+    * Fixed - A few other minor bugs
+    * Added - Logging to log for awarding/removing awards (admincp & modcp)
     * Updated - Version in version phrase
 
 4.0.6 RELEASE:  (19/02/2013)
-    * Fixed - installation instructions being unclear as to what should be uploaded and steps to import the xml
-    * Fixed - deprecated (php 5.3) calls to egrep, replaced with preg_replace
-    * Fixed - a couple of other deprecation (php 5.3) issues
-    * Fixed - profile tab spacing restoration from 4.0.5 not working with files saved as css
-    * Fixed - postbit alignment (non-legacy)
-    * Fixed - award recommenders userid being placed in the userid field instead of award recipient's userid when granting an award
-    * Added - vertical spacing around the awards showcase in postbit legacy
-    * Updated - templates YAAS in Member Profile - Profile & YAAS - Member List Display to improve vbSSO compatibility
-    * Updated - admincp/modcp query for managing an award to sort users by issue date/time
-    * Updated - date display to add a comma between the date and time
+    * Fixed - Installation instructions being unclear as to what should be uploaded and steps to import the xml
+    * Fixed - Deprecated (php 5.3) calls to egrep, replaced with preg_replace
+    * Fixed - A couple of other deprecation (php 5.3) issues
+    * Fixed - Profile tab spacing restoration from 4.0.5 not working with files saved as css
+    * Fixed - Postbit alignment (non-legacy)
+    * Fixed - Award recommenders userid being placed in the userid field instead of award recipient's userid when granting an award
+    * Added - Vertical spacing around the awards showcase in postbit legacy
+    * Updated - Templates YAAS in Member Profile - Profile & YAAS - Member List Display to improve vbSSO compatibility
+    * Updated - Admincp/modcp query for managing an award to sort users by issue date/time
+    * Updated - Date display to add a comma between the date and time
     * Updated - Version in version phrase
 
 4.0.5 RELEASE:  (29/01/2013)
-    * Fixed - granting an award reqest/recommendation not deleting the request/recommendation
-    * Fixed - requests not being displayed if the recipient or requestor accounts have been deleted
-    * Fixed - emails not being sent when usernames are used to give an award and the send email option is chosen
-    * Fixed - the award postbit display not always being in the correct location when using postbit_legacy
-    * Fixed - the box around the fieldset being invisible (award postbit style 1) when css saved as a file
-    * Fixed - the award postbit disappearing after editing a post
-    * Fixed - deprecation errors due to php 5.3+ in various locations
-    * Restored - the spacing between awards on the awards tab user profiles
-    * Renamed - construct_depth_mark function to yaas_construct_depth_mark
+    * Fixed - Granting an award request/recommendation not deleting the request/recommendation
+    * Fixed - Requests not being displayed if the recipient or requestor accounts have been deleted
+    * Fixed - Emails not being sent when usernames are used to give an award and the send email option is chosen
+    * Fixed - The award postbit display not always being in the correct location when using postbit_legacy
+    * Fixed - The box around the fieldset being invisible (award postbit style 1) when css saved as a file
+    * Fixed - The award postbit disappearing after editing a post
+    * Fixed - Deprecation errors due to php 5.3+ in various locations
+    * Restored - The spacing between awards on the awards tab user profiles
+    * Renamed - The construct_depth_mark function to yaas_construct_depth_mark
     * Updated - Version in version phrase
     * Removed - Four plugins that are no longer used (CSS - Cache Template, YAAS - Profile Tab, YAAS in Member Profile - Cache Template, YAAS - postbit display start)
 
@@ -68,15 +83,15 @@
     * Updated Version in version phrase
 
 4.0.2 RELEASE:  (04/10/2010 5:30AM CDT)
-    * Fixed - Spacing on primary Awards Display page 
-    * Fixed - Display Order in AdminCP Options not saving properly 
-    * Fixed - "Awards" displaying on all profile tabs.
+    * Fixed - Spacing on primary Awards Display page
+    * Fixed - Display Order in AdminCP Options not saving properly
+    * Fixed - "Awards" displaying on all profile tabs
     * Fixed - Award Profile Tab Phrased
-   
-    * Added - Award Recommendations and Requests are viewable in the AdminCP
-    * Added - Diagnostics Tab (Currently not used, place holder).
 
-    * Database - Database Errors on installation are now displayed.
+    * Added - Award Recommendations and Requests are viewable in the AdminCP
+    * Added - Diagnostics Tab (Currently not used, place holder)
+
+    * Database - Database Errors on installation are now displayed
     * Database - award_requests table added
 
     * Removed - Automation Phrases (Automation will be a seperate plugin)
@@ -87,36 +102,36 @@
 
 4.0.0 RC1 RELEASE:  (01/13/2010 1:15AM CST)
 
-    * Fixed - Award Tab Display for vBulletin 4.0.1.
+    * Fixed - Award Tab Display for vBulletin 4.0.1
 
 4.0.0 BETA 3 RELEASE: (01/12/2010 5:45AM CST)
 
-    * Fixed - SQL Group By syntax when Points are enabled.
-    * Fixed - Issuing Awards to users with ' in usernames.
-    * Fixed - "Award System Settings" SettingGroup name.
-    * Fixed - Phrases for Award Request/Recommendation Settings.
-    * Fixed - All templates should be properly cached.
-    * Fixed - Inactive awards no longer display in postbit.
+    * Fixed - SQL Group By syntax when Points are enabled
+    * Fixed - Issuing Awards to users with ' in usernames
+    * Fixed - "Award System Settings" SettingGroup name
+    * Fixed - Phrases for Award Request/Recommendation Settings
+    * Fixed - All templates should be properly cached
+    * Fixed - Inactive awards no longer display in postbit
     * Fixed - Postbit Sytle 1 Formatting. (Fieldset format in awards_css.css template)
     * Fixed - Postbit Sytle 2 Formatting. (Moved closing </div>)
-    * Fixed - Awards display column formatting.
+    * Fixed - Awards display column formatting
 
     * Added - 'Custom CSS' Display Style. (Editable in awards_css.css template)
 
-    * Improved - Version Information in AdminCP.
-    * Improved - Award Name is added to Post/PM Title Recommendations/Requests.
-    * Improved - Postbit Display Location descriptions.
+    * Improved - Version Information in AdminCP
+    * Improved - Award Name is added to Post/PM Title Recommendations/Requests
+    * Improved - Postbit Display Location descriptions
 
 4.0.0 BETA 2 RELEASE:
 
-    * Fixed - Profile Tab is now working.
-          You may have to click on the awards tab twice to get the data to show. This is a bug in vBulletin that will hopefully be fixed in 4.0.1.
-    * Fixed - Cleaner Awards Layout on the main Awards System page.
+    * Fixed - Profile Tab is now working
+        (You may have to click on the awards tab twice to get the data to show. This is a bug in vBulletin that will hopefully be fixed in 4.0.1)
+    * Fixed - Cleaner Awards Layout on the main Awards System page
     * Fixed - With vBulletin changing a lot of the Style Variables, all "Styles" are now customizable via CSS in the template awards_css.css
-    * Fixed - Category Depth bug on Awards System Page.
-    * Fixed - ModCP/awards.php is working again.
-    * Fixed - a few other minor bugs I stumbled across.
-    * Fixed - text formatting on the Awards Request and Recommend pages.
+    * Fixed - Category Depth bug on Awards System Page
+    * Fixed - ModCP/awards.php is working again
+    * Fixed - a few other minor bugs I stumbled across
+    * Fixed - text formatting on the Awards Request and Recommend pages
 
 4.0.0 BETA RELEASE:
 

@@ -1,7 +1,7 @@
 <?php
 /*======================================================================*\
 || #################################################################### ||
-|| # Yet Another Award System v4.0.8 © by HacNho                      # ||
+|| # Yet Another Award System v4.0.9 © by HacNho                      # ||
 || # Copyright (C) 2005-2007 by HacNho, All rights reserved.          # ||
 || # ---------------------------------------------------------------- # ||
 || # For use with vBulletin Version 4.1.12                            # ||
@@ -47,15 +47,14 @@ if (empty($_REQUEST['do']))
 }
 
 $vbulletin->input->clean_array_gpc('p', array(
-	'award_id' => TYPE_UINT,
-	'awarduserid' => TYPE_UINT
+	'award_id'		=> TYPE_UINT,
+	'awarduserid'	=> TYPE_UINT
 ));
 
 log_admin_action(iif($vbulletin->GPC['award_id'] != 0 AND $vbulletin->GPC['awarduserid'] != 0, "award_id = " . $vbulletin->GPC['award_id'] . ", userid = " . $vbulletin->GPC['awarduserid']));
 
 if ($_REQUEST['do'] == 'display')
 {
-		
 	// Grab List of Requests
 	$awardRequests = $db->query_read("
 		SELECT a.*, award.award_name, vb.username AS UserFor, vb2.username AS UserFrom
@@ -69,27 +68,35 @@ if ($_REQUEST['do'] == 'display')
 	print_form_header('', '');
 	print_table_header($vbphrase['award_requests'], 6);
 	print_cells_row(array(
-			$vbphrase['award_request_time'],
-			$vbphrase['award_request_user_from'],
-			$vbphrase['award_request_user_for'],
-			$vbphrase['award_request_award_name'],
-			$vbphrase['award_request_reason'],
-			$vbphrase['controls']
-			), 1, '', -1);
-			
-		while ($celldata = $db->fetch_array($awardRequests))
-		{
-		
+		$vbphrase['award_request_time'],
+		$vbphrase['award_request_user_from'],
+		$vbphrase['award_request_user_for'],
+		$vbphrase['award_request_award_name'],
+		$vbphrase['award_request_reason'],
+		$vbphrase['controls']
+	), 1, '', 1);
+
+	while ($celldata = $db->fetch_array($awardRequests))
+	{
 		$cell = array();
 		
 		$cell[] = $celldata[award_req_timestamp];
-		$cell[] = $celldata[UserFrom];
+		$cell[] = ($celldata[award_req_uid] == 0 ? $vbphrase['guest'] : $celldata[UserFrom]);
 		$cell[] = $celldata[UserFor];
 		$cell[] = $celldata[award_name];
 		$cell[] = $celldata[award_req_reason];
-		$cell[] = "<a href='award_requests.php?do=grant&amp;taskid=$celldata[award_req_id]'>Grant</a><br /><a href='award_requests.php?do=delete&amp;taskid=$celldata[award_req_id]'>Delete</a>";
-		
-	print_cells_row($cell, 0, '', 1);
+		$cell[] = construct_link_code(
+					$vbphrase['yaas_grant'], "award_requests.php?"
+					. $vbulletin->session->vars['sessionurl']
+					. "do=grant&amp;taskid=$celldata[award_req_id]"
+				) .
+				construct_link_code(
+					$vbphrase['delete'], "award_requests.php?"
+					. $vbulletin->session->vars['sessionurl']
+					. "do=delete&amp;taskid=$celldata[award_req_id]"
+				);
+
+		print_cells_row($cell, 0, '', 1);
 	}
 	print_table_footer(6, '', '', 0);  
 }
@@ -97,7 +104,7 @@ if ($_REQUEST['do'] == 'display')
 if ($_REQUEST['do'] == 'delete')
 {
 	$vbulletin->input->clean_array_gpc('r', array(
-		'taskid' => TYPE_INT,
+		'taskid'	=> TYPE_INT,
 	));
 
 	if (!$vbulletin->GPC['taskid'])
@@ -167,9 +174,9 @@ if ($_GET['do'] == 'grant')
 		$vbphrase['award_image'],
 		$vbphrase['manage']
 	), 1, '', -1);
-	 
-	 echo "
-	 <tr>
+
+	echo "
+	<tr>
 		<td class=\"$bgclass\"><strong>$award_request[award_name]</strong></td>
 		<td class=\"$bgclass\"><dfn>{$award_request[award_desc]}</dfn></td>
 		<td class=\"$bgclass\" align=\"center\"><img src=\"" . iif(substr($award_request[award_icon_url], 0, 7) != 'http://' AND substr($award_request[award_icon_url], 0, 1) != '/', '../', '') . "$award_request[award_icon_url]\" border=\"0\" alt=\"\" /></td>
@@ -191,7 +198,7 @@ if ($_GET['do'] == 'grant')
 	  </tr>";
 	print_table_footer(2, '', '', false);
 
-// print give award to user block
+	// print give award to user block
 	print_form_header('award_requests', 'dogrant');
 	construct_hidden_code('award_id', $award_request['award_req_aid']);
 	construct_hidden_code('award_name', $award_request['award_name']);
@@ -212,15 +219,15 @@ if ($_GET['do'] == 'grant')
 if($_POST['do'] == 'dogrant')
 {
 	$vbulletin->input->clean_array_gpc('p', array(
-		'award_id' => TYPE_INT,
-		'award_name' => TYPE_STR,
-		'award_img_url' => TYPE_STR,
-		'awarduserid' => TYPE_INT,
-		'awardusername' => TYPE_STR,
-		'issue_reason' => TYPE_STR,
-		'award_sendpm' => TYPE_INT,
-		'award_sendemail' => TYPE_INT,
-		'taskid' => TYPE_INT
+		'award_id'			=> TYPE_INT,
+		'award_name'		=> TYPE_STR,
+		'award_img_url'		=> TYPE_STR,
+		'awarduserid'		=> TYPE_INT,
+		'awardusername'		=> TYPE_STR,
+		'issue_reason'		=> TYPE_STR,
+		'award_sendpm'		=> TYPE_INT,
+		'award_sendemail'	=> TYPE_INT,
+		'taskid'			=> TYPE_INT
 	));
 
 	if (!empty($vbulletin->GPC['awarduserid']))
@@ -266,7 +273,6 @@ if($_POST['do'] == 'dogrant')
 		DELETE FROM " . TABLE_PREFIX . "award_requests WHERE award_req_id = " . $vbulletin->GPC['taskid']
 	);
 
-	$issue_id = mysql_insert_id(); 
 	if ($vbulletin->GPC['award_sendpm'])
 	{
 		if ($vbulletin->options['award_pm_fromuserid'] != 0)

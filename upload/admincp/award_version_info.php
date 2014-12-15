@@ -1,7 +1,7 @@
 <?php
 /*======================================================================*\
 || #################################################################### ||
-|| # Yet Another Award System v4.0.8 © by HacNho                      # ||
+|| # Yet Another Award System v4.0.9 © by HacNho                      # ||
 || # Copyright (C) 2005-2007 by HacNho, All rights reserved.          # ||
 || # ---------------------------------------------------------------- # ||
 || # For use with vBulletin Version 4.1.12                            # ||
@@ -42,11 +42,9 @@ if (!can_administer('canadminusers'))
 print_cp_header($vbphrase['awards']);
 
 // Get Latest Version from vBulletin.org
-$productVerCheckURL = "http://www.vbulletin.org/forum/misc.php?do=productcheck&pid=YaAS4-40";
+$productVerCheckURL = "http://www.vbulletin.org/forum/misc.php?do=productcheck&pid=yaas4";
 $latestVersion = file_get_contents($productVerCheckURL);
-$latestVersion = preg_replace("/[^A-Za-z0-9.]/", "", $latestVersion );
-$latestVersion = substr($latestVersion, 23);
-$latestVersion = preg_replace("/[^0-9.]/", "", $latestVersion );
+$latestVersion = preg_replace("/<.+>(\d+(\.\d+)*)<\/.+>/", "$1", $latestVersion );
 
 // Get Current Version
 $array = $db->query_first("SELECT version FROM " . TABLE_PREFIX . "product WHERE productid = 'yet_another_award_system' LIMIT 1");  
@@ -57,27 +55,24 @@ echo "<h2>Yet Another Awards System v$currentVersion</h2>";
 echo "<hr>";
 echo "<br />";
 
-if ( $currentVersion > $latestVersion ) {
+if ( $currentVersion > $latestVersion )
+{
 	echo "This is a beta build.";
 	echo "<br />";
 	echo "Current Released version is $latestVersion";
-	}
-	
-if ( $currentVersion == $latestVersion ) {
+}
+elseif ( $currentVersion == $latestVersion )
+{
 	echo "This build is current.";
-	}
-	
-if ( $currentVersion < $latestVersion ) {
+}
+else //if ( $currentVersion < $latestVersion )
+{
 	echo "An updated version has been released.";
 	echo "<br />";
 	echo "[ <a href='http://www.vbulletin.org/forum/showthread.php?t=232684'>Download Update</a> ]";
-	}
+}
 echo "<br />";
-
-
-
 // #############################################################################
 
 print_cp_footer();
-
 ?>
